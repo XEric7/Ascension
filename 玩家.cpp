@@ -1,14 +1,157 @@
 #include"通用.h"
 IMAGE chara1[2];
 
+IMAGE chara1_runr[8][2];
+IMAGE chara1_runl[8][2];
+IMAGE chara1_left[2];
+IMAGE chara1_right[2];
+IMAGE chara1_jump[2][6][2];  //0左1右
+
 //角色位置信息
 int char_position[2] = { 100,680 };
+
+void drawchar_runr();
+void drawchar_runl();
+void draw_jump();
+int jump_count = 0;
+static char last = 'r';  //判断上一时刻状态  
+
+void getimage_char() {
+	//向右奔跑
+	loadimage(&chara1_runr[0][0], _T("picture\\char1\\right\\1_0.png"));
+	loadimage(&chara1_runr[0][1], _T("picture\\char1\\right\\1_1.png"));
+	loadimage(&chara1_runr[1][0], _T("picture\\char1\\right\\2_0.png"));
+	loadimage(&chara1_runr[1][1], _T("picture\\char1\\right\\2_1.png"));
+	loadimage(&chara1_runr[2][0], _T("picture\\char1\\right\\3_0.png"));
+	loadimage(&chara1_runr[2][1], _T("picture\\char1\\right\\3_1.png"));
+	loadimage(&chara1_runr[3][0], _T("picture\\char1\\right\\4_0.png"));
+	loadimage(&chara1_runr[3][1], _T("picture\\char1\\right\\4_1.png"));
+	loadimage(&chara1_runr[4][0], _T("picture\\char1\\right\\5_0.png"));
+	loadimage(&chara1_runr[4][1], _T("picture\\char1\\right\\5_1.png"));
+	loadimage(&chara1_runr[5][0], _T("picture\\char1\\right\\6_0.png"));
+	loadimage(&chara1_runr[5][1], _T("picture\\char1\\right\\6_1.png"));
+	loadimage(&chara1_runr[6][0], _T("picture\\char1\\right\\7_0.png"));
+	loadimage(&chara1_runr[6][1], _T("picture\\char1\\right\\7_1.png"));
+	loadimage(&chara1_runr[7][0], _T("picture\\char1\\right\\8_0.png"));
+	loadimage(&chara1_runr[7][1], _T("picture\\char1\\right\\8_1.png"));
+
+	//向左奔跑
+	loadimage(&chara1_runl[0][0], _T("picture\\char1\\left\\1_0.png"));
+	loadimage(&chara1_runl[0][1], _T("picture\\char1\\left\\1_1.png"));
+	loadimage(&chara1_runl[1][0], _T("picture\\char1\\left\\2_0.png"));
+	loadimage(&chara1_runl[1][1], _T("picture\\char1\\left\\2_1.png"));
+	loadimage(&chara1_runl[2][0], _T("picture\\char1\\left\\3_0.png"));
+	loadimage(&chara1_runl[2][1], _T("picture\\char1\\left\\3_1.png"));
+	loadimage(&chara1_runl[3][0], _T("picture\\char1\\left\\4_0.png"));
+	loadimage(&chara1_runl[3][1], _T("picture\\char1\\left\\4_1.png"));
+	loadimage(&chara1_runl[4][0], _T("picture\\char1\\left\\5_0.png"));
+	loadimage(&chara1_runl[4][1], _T("picture\\char1\\left\\5_1.png"));
+	loadimage(&chara1_runl[5][0], _T("picture\\char1\\left\\6_0.png"));
+	loadimage(&chara1_runl[5][1], _T("picture\\char1\\left\\6_1.png"));
+	loadimage(&chara1_runl[6][0], _T("picture\\char1\\left\\7_0.png"));
+	loadimage(&chara1_runl[6][1], _T("picture\\char1\\left\\7_1.png"));
+	loadimage(&chara1_runl[7][0], _T("picture\\char1\\left\\8_0.png"));
+	loadimage(&chara1_runl[7][1], _T("picture\\char1\\left\\8_1.png"));
+
+	//静止状态
+	loadimage(&chara1_right[0], _T("picture\\char1\\static\\r0.png"));
+	loadimage(&chara1_right[1], _T("picture\\char1\\static\\r1.png"));
+	loadimage(&chara1_left[0], _T("picture\\char1\\static\\l0.png"));
+	loadimage(&chara1_left[1], _T("picture\\char1\\static\\l1.png"));
+
+	//向右跳跃
+	loadimage(&chara1_jump[1][0][0], _T("picture\\char1\\jump\\right\\1_0.png"));
+	loadimage(&chara1_jump[1][0][1], _T("picture\\char1\\jump\\right\\1_1.png"));
+	loadimage(&chara1_jump[1][1][0], _T("picture\\char1\\jump\\right\\2_0.png"));
+	loadimage(&chara1_jump[1][1][1], _T("picture\\char1\\jump\\right\\2_1.png"));
+	loadimage(&chara1_jump[1][2][0], _T("picture\\char1\\jump\\right\\3_0.png"));
+	loadimage(&chara1_jump[1][2][1], _T("picture\\char1\\jump\\right\\3_1.png"));
+	loadimage(&chara1_jump[1][3][0], _T("picture\\char1\\jump\\right\\4_0.png"));
+	loadimage(&chara1_jump[1][3][1], _T("picture\\char1\\jump\\right\\4_1.png"));
+	loadimage(&chara1_jump[1][4][0], _T("picture\\char1\\jump\\right\\5_0.png"));
+	loadimage(&chara1_jump[1][4][1], _T("picture\\char1\\jump\\right\\5_1.png"));
+	loadimage(&chara1_jump[1][5][0], _T("picture\\char1\\jump\\right\\6_0.png"));
+	loadimage(&chara1_jump[1][5][1], _T("picture\\char1\\jump\\right\\6_1.png"));
+
+	//向左跳跃
+	loadimage(&chara1_jump[0][0][0], _T("picture\\char1\\jump\\left\\1_0.png"));
+	loadimage(&chara1_jump[0][0][1], _T("picture\\char1\\jump\\left\\1_1.png"));
+	loadimage(&chara1_jump[0][1][0], _T("picture\\char1\\jump\\left\\2_0.png"));
+	loadimage(&chara1_jump[0][1][1], _T("picture\\char1\\jump\\left\\2_1.png"));
+	loadimage(&chara1_jump[0][2][0], _T("picture\\char1\\jump\\left\\3_0.png"));
+	loadimage(&chara1_jump[0][2][1], _T("picture\\char1\\jump\\left\\3_1.png"));
+	loadimage(&chara1_jump[0][3][0], _T("picture\\char1\\jump\\left\\4_0.png"));
+	loadimage(&chara1_jump[0][3][1], _T("picture\\char1\\jump\\left\\4_1.png"));
+	loadimage(&chara1_jump[0][4][0], _T("picture\\char1\\jump\\left\\5_0.png"));
+	loadimage(&chara1_jump[0][4][1], _T("picture\\char1\\jump\\left\\5_1.png"));
+	loadimage(&chara1_jump[0][5][0], _T("picture\\char1\\jump\\left\\6_0.png"));
+	loadimage(&chara1_jump[0][5][1], _T("picture\\char1\\jump\\left\\6_1.png"));
+
+}
+
+void drawchar_runr() {
+	static int count = 0;
+	if (count >= 40) {
+		count = 0;
+	}
+
+	//放置图片
+	putimage(char_position[0], char_position[1], &chara1_runr[count/5][1], NOTSRCERASE);
+	putimage(char_position[0], char_position[1], &chara1_runr[count/5][0], SRCINVERT);
+	count++;
+}
+
+void drawchar_runl() {
+	static int count = 0;
+	if (count >= 40) {
+		count = 0;
+	}
+
+	//放置图片
+	putimage(char_position[0], char_position[1], &chara1_runl[count / 5][1], NOTSRCERASE);
+	putimage(char_position[0], char_position[1], &chara1_runl[count / 5][0], SRCINVERT);
+	count++;
+}
+
 void drawchar() {
-	loadimage(&chara1[0], _T("chara1_0.png"));
-	loadimage(&chara1[1], _T("chara1_1.png"));
+	loadimage(&chara1[0], _T("picture\\chara1_0.png"));
+	loadimage(&chara1[1], _T("picture\\chara1_1.png"));
 	putimage(char_position[0], char_position[1], &chara1[1], NOTSRCERASE);
 	putimage(char_position[0], char_position[1], &chara1[0], SRCINVERT);
 }
+
+void draw_jump() {
+	const int JUMP_DELAY = 5;
+	int dir;
+	if (last == 'l') {
+		dir = 0;
+	}
+	else {
+		dir = 1;
+	}
+	if (jump_count <2* JUMP_DELAY) {
+		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count/JUMP_DELAY][1], NOTSRCERASE);
+		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count/ JUMP_DELAY][0], SRCINVERT);
+		jump_count++;
+	}
+	else if (jump_count < 3* JUMP_DELAY) {
+		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count / JUMP_DELAY][1], NOTSRCERASE);
+		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count / JUMP_DELAY][0], SRCINVERT);
+		if (ground_under(char_position[0], char_position[1] + 100)) {
+			jump_count = 3* JUMP_DELAY;
+		}
+	}
+	else if (jump_count<5* JUMP_DELAY) {
+		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count/ JUMP_DELAY][1], NOTSRCERASE);
+		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count/ JUMP_DELAY][0], SRCINVERT);
+		jump_count++;
+	}
+	else if (jump_count >= 5* JUMP_DELAY) {
+		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count / JUMP_DELAY][1], NOTSRCERASE);
+		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count / JUMP_DELAY][0], SRCINVERT);
+	}
+}
+
 
 void char_control() {
 	static int char1_speed = 0;    //y轴方向速度 向下为正方向
@@ -22,24 +165,46 @@ void char_control() {
 		if ((GetAsyncKeyState(VK_SPACE) & 0x8000)) {
 			char1_speed = -15;
 		}
+		if (ground_left() == 0 && (GetAsyncKeyState(0x41) & 0x8000)) {   //a
+			char_position[0] -= 5;
+			drawchar_runl();
+			last = 'l';
+		}
+		else if (ground_right() == 0 && (GetAsyncKeyState(0x44) & 0x8000)) {  //d
+			char_position[0] += 5;
+			drawchar_runr();
+			last = 'r';
+		}
+		//静止
+		else if(last=='r'){
+			putimage(char_position[0], char_position[1], &chara1_right[1], NOTSRCERASE);
+			putimage(char_position[0], char_position[1], &chara1_right[0], SRCINVERT);
+		}
+		else {
+			putimage(char_position[0], char_position[1], &chara1_left[1], NOTSRCERASE);
+			putimage(char_position[0], char_position[1], &chara1_left[0], SRCINVERT);
+		}
+		jump_count = 0;
 	}
-	else {
+	else {   //不在地上
 		if (speedwait++ % 2 == 0)
 			char1_speed++;
 		if (char1_speed > 15 && ground_under(char_position[0], char_position[1] + 15)) {     //防止速度过快逃脱判定
 			char1_speed =15;
 		}
+		if (ground_left() == 0 && (GetAsyncKeyState(0x41) & 0x8000)) {   //a
+			char_position[0] -= 5;
+			last = 'l';
+		}
+		else if (ground_right() == 0 && (GetAsyncKeyState(0x44) & 0x8000)) {  //d
+			char_position[0] += 5;
+			last = 'r';
+		}
+		draw_jump();
 	}
 	char_position[1] += char1_speed;
 
-	if (ground_left() == 0) {
-		if ((GetAsyncKeyState(0x41) & 0x8000)) //a
-			char_position[0] -= 5;
-	}
-	if(ground_right()==0){
-		if ((GetAsyncKeyState(0x44) & 0x8000)) //d
-			char_position[0] += 5;
-	}
+
 }
 
 //输入道具位置 1得到 0未得到

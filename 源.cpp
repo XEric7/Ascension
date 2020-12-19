@@ -22,6 +22,7 @@ int screen_down = 0;    //屏幕总共向下移动的距离  可用来计算分数 难度
 int main() {
 	//初始化界面
 	init();
+	getimage_char();
 	int blood = blood_max;   //血量系统
 	int blood_pluse = 0;     //无敌时间
 
@@ -32,14 +33,16 @@ int main() {
 	while (1) {
 		//绘图
 		drawbackground();
-		drawchar();
+		char_control();    //角色控制
+
+		
 		drawenemy1();
 		drawheart(blood);
 		drawground();
 		drawtool1();
 		FlushBatchDraw();
 
-		char_control();    //角色控制
+		
 
 		//道具一判定
 		if (blood < blood_max) {

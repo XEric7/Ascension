@@ -6,6 +6,7 @@
 #include<conio.h>
 #include<Windows.h>
 #include<stdlib.h>
+#include<string.h>
 #define LEVEL 200           //层高
 #define WIDTH 1500
 #define HIGH 800
@@ -31,6 +32,7 @@ int ground_left(void);
 int ground_right(void);
 void drawtool1(void);
 int gettool(int x, int y);
+void getimage_char();
 
 
 //变量声明
