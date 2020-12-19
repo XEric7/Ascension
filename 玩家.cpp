@@ -4,8 +4,8 @@ IMAGE chara1[2];
 //角色位置信息
 int char_position[2] = { 100,680 };
 void drawchar() {
-	loadimage(&chara1[0], _T("D:\\resource\\chara1_0.png"));
-	loadimage(&chara1[1], _T("D:\\resource\\chara1_1.png"));
+	loadimage(&chara1[0], _T("chara1_0.png"));
+	loadimage(&chara1[1], _T("chara1_1.png"));
 	putimage(char_position[0], char_position[1], &chara1[1], NOTSRCERASE);
 	putimage(char_position[0], char_position[1], &chara1[0], SRCINVERT);
 }

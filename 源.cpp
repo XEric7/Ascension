@@ -93,7 +93,7 @@ int main() {
 
 //初始化 只在开始时执行
 void init() {
-	mciSendString(_T("open  D:\\resource\\bkmusic.mp3 alias bkmusic") ,NULL, 0, NULL);
+	mciSendString(_T("open  bkmusic.mp3 alias bkmusic") ,NULL, 0, NULL);
 	mciSendString(_T("play bkmusic repeat"), NULL, 0, NULL);
 	initgraph(WIDTH, HIGH);
 	BeginBatchDraw();
@@ -118,8 +118,8 @@ void init() {
 
 void drawtool1(void) {
 	IMAGE tool[2];
-	loadimage(&tool[0], _T("D:\\resource\\tool_heart_0.png"));
-	loadimage(&tool[1], _T("D:\\resource\\tool_heart_1.png"));
+	loadimage(&tool[0], _T("tool_heart_0.png"));
+	loadimage(&tool[1], _T("tool_heart_1.png"));
 	putimage(tool1_position[0], tool1_position[1], &tool[1], NOTSRCERASE);
 	putimage(tool1_position[0], tool1_position[1], &tool[0], SRCINVERT);
 }
@@ -132,10 +132,10 @@ void drawbackground() {
 void drawheart(int blood) {
 	IMAGE heart_empty[2];
 	IMAGE heart_full[2];
-	loadimage(&heart_empty[0], _T("D:\\resource\\heart_empty_0.png"));
-	loadimage(&heart_empty[1], _T("D:\\resource\\heart_empty_1.png"));
-	loadimage(&heart_full[0], _T("D:\\resource\\heart_full_0.png"));
-	loadimage(&heart_full[1], _T("D:\\resource\\heart_full_1.png"));
+	loadimage(&heart_empty[0], _T("heart_empty_0.png"));
+	loadimage(&heart_empty[1], _T("heart_empty_1.png"));
+	loadimage(&heart_full[0], _T("heart_full_0.png"));
+	loadimage(&heart_full[1], _T("heart_full_1.png"));
 
 	for (int i = 0; i < blood_max; i++) {
 		if (i < blood) {
@@ -152,12 +152,12 @@ void drawheart(int blood) {
 
 void drawenemy1(void) {
 	//怪
-	loadimage(&enemy1[0], _T("D:\\resource\\enemy1_0.png"));
-	loadimage(&enemy1[1], _T("D:\\resource\\enemy1_1.png"));
+	loadimage(&enemy1[0], _T("enemy1_0.png"));
+	loadimage(&enemy1[1], _T("enemy1_1.png"));
 
 	//fire
-	loadimage(&enemy1fire1left[0], _T("D:\\resource\\enemy1fire1_0.png"));
-	loadimage(&enemy1fire1left[1], _T("D:\\resource\\enemy1fire1_1.png"));
+	loadimage(&enemy1fire1left[0], _T("enemy1fire1_0.png"));
+	loadimage(&enemy1fire1left[1], _T("enemy1fire1_1.png"));
 	for (int i = 0; i < enemy1_max; i++) {
 		putimage(enemy1_position[i][0], enemy1_position[i][1], &enemy1[1], NOTSRCERASE);
 		putimage(enemy1_position[i][0], enemy1_position[i][1], &enemy1[0], SRCINVERT);
@@ -169,8 +169,8 @@ void drawenemy1(void) {
 //显示初始地面
 void drawground() {
 	IMAGE brick[2];
-	loadimage(&brick[0], _T("D:\\resource\\ground_0.png"));
-	loadimage(&brick[1], _T("D:\\resource\\ground_1.png"));
+	loadimage(&brick[0], _T("ground_0.png"));
+	loadimage(&brick[1], _T("ground_1.png"));
 	for (int i = 0; i < HIGH; i++) {
 		for (int q = 0; q < WIDTH; q++) {
 			if (ground_position[q][i]) {
