@@ -125,7 +125,7 @@ void drawtool1(void) {
 }
 void drawbackground() {
 	IMAGE bk;
-	loadimage(&bk, _T("D:\\resource\\bk.jpg"));
+	loadimage(&bk, _T("bk.jpg"));
 	putimage(0, 0, &bk);
 }
 
