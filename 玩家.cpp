@@ -6,6 +6,7 @@ IMAGE chara1_runl[8][2];
 IMAGE chara1_left[2];
 IMAGE chara1_right[2];
 IMAGE chara1_jump[2][6][2];  //0左1右
+IMAGE chara1_fightn[2][7][2];   //普攻
 
 //角色位置信息
 int char_position[2] = { 100,680 };
@@ -13,6 +14,10 @@ int char_position[2] = { 100,680 };
 void drawchar_runr();
 void drawchar_runl();
 void draw_jump();
+void fightn();   //普通攻击
+#define FIGHT_DELAY 3
+int fight_count =6* FIGHT_DELAY;
+
 int jump_count = 0;
 static char last = 'r';  //判断上一时刻状态  
 
@@ -87,6 +92,36 @@ void getimage_char() {
 	loadimage(&chara1_jump[0][5][0], _T("picture\\char1\\jump\\left\\6_0.png"));
 	loadimage(&chara1_jump[0][5][1], _T("picture\\char1\\jump\\left\\6_1.png"));
 
+	//普攻
+	loadimage(&chara1_fightn[0][0][0], _T("picture\\char1\\fightn\\left\\0_0.png"));
+	loadimage(&chara1_fightn[0][0][1], _T("picture\\char1\\fightn\\left\\0_1.png"));
+	loadimage(&chara1_fightn[0][1][0], _T("picture\\char1\\fightn\\left\\1_0.png"));
+	loadimage(&chara1_fightn[0][1][1], _T("picture\\char1\\fightn\\left\\1_1.png"));
+	loadimage(&chara1_fightn[0][2][0], _T("picture\\char1\\fightn\\left\\2_0.png"));
+	loadimage(&chara1_fightn[0][2][1], _T("picture\\char1\\fightn\\left\\2_1.png"));
+	loadimage(&chara1_fightn[0][3][0], _T("picture\\char1\\fightn\\left\\3_0.png"));
+	loadimage(&chara1_fightn[0][3][1], _T("picture\\char1\\fightn\\left\\3_1.png"));
+	loadimage(&chara1_fightn[0][4][0], _T("picture\\char1\\fightn\\left\\4_0.png"));
+	loadimage(&chara1_fightn[0][4][1], _T("picture\\char1\\fightn\\left\\4_1.png"));
+	loadimage(&chara1_fightn[0][5][0], _T("picture\\char1\\fightn\\left\\5_0.png"));
+	loadimage(&chara1_fightn[0][5][1], _T("picture\\char1\\fightn\\left\\5_1.png"));
+	loadimage(&chara1_fightn[0][6][0], _T("picture\\char1\\fightn\\left\\6_0.png"));
+	loadimage(&chara1_fightn[0][6][1], _T("picture\\char1\\fightn\\left\\6_1.png"));
+
+	loadimage(&chara1_fightn[1][0][0], _T("picture\\char1\\fightn\\right\\0_0.png"));
+	loadimage(&chara1_fightn[1][0][1], _T("picture\\char1\\fightn\\right\\0_1.png"));
+	loadimage(&chara1_fightn[1][1][0], _T("picture\\char1\\fightn\\right\\1_0.png"));
+	loadimage(&chara1_fightn[1][1][1], _T("picture\\char1\\fightn\\right\\1_1.png"));
+	loadimage(&chara1_fightn[1][2][0], _T("picture\\char1\\fightn\\right\\2_0.png"));
+	loadimage(&chara1_fightn[1][2][1], _T("picture\\char1\\fightn\\right\\2_1.png"));
+	loadimage(&chara1_fightn[1][3][0], _T("picture\\char1\\fightn\\right\\3_0.png"));
+	loadimage(&chara1_fightn[1][3][1], _T("picture\\char1\\fightn\\right\\3_1.png"));
+	loadimage(&chara1_fightn[1][4][0], _T("picture\\char1\\fightn\\right\\4_0.png"));
+	loadimage(&chara1_fightn[1][4][1], _T("picture\\char1\\fightn\\right\\4_1.png"));
+	loadimage(&chara1_fightn[1][5][0], _T("picture\\char1\\fightn\\right\\5_0.png"));
+	loadimage(&chara1_fightn[1][5][1], _T("picture\\char1\\fightn\\right\\5_1.png"));
+	loadimage(&chara1_fightn[1][6][0], _T("picture\\char1\\fightn\\right\\6_0.png"));
+	loadimage(&chara1_fightn[1][6][1], _T("picture\\char1\\fightn\\right\\6_1.png"));
 }
 
 void drawchar_runr() {
@@ -122,13 +157,7 @@ void drawchar() {
 
 void draw_jump() {
 	const int JUMP_DELAY = 5;
-	int dir;
-	if (last == 'l') {
-		dir = 0;
-	}
-	else {
-		dir = 1;
-	}
+	int dir = (last == 'l' ? 0 : 1);
 	if (jump_count <2* JUMP_DELAY) {
 		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count/JUMP_DELAY][1], NOTSRCERASE);
 		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count/ JUMP_DELAY][0], SRCINVERT);
@@ -152,6 +181,13 @@ void draw_jump() {
 	}
 }
 
+//普通攻击
+void fightn() {
+	int dir = (last == 'l' ? 0 : 1);
+	putimage(char_position[0], char_position[1], &chara1_fightn[dir][fight_count/ FIGHT_DELAY][1], NOTSRCERASE);
+	putimage(char_position[0], char_position[1], &chara1_fightn[dir][fight_count/ FIGHT_DELAY][0], SRCINVERT);
+	fight_count++;
+}
 
 void char_control() {
 	static int char1_speed = 0;    //y轴方向速度 向下为正方向
@@ -162,28 +198,37 @@ void char_control() {
 	}
 	if (ground_under(char_position[0],char_position[1])) {
 		char1_speed = 0;
-		if ((GetAsyncKeyState(VK_SPACE) & 0x8000)) {
-			char1_speed = -15;
-		}
-		if (ground_left() == 0 && (GetAsyncKeyState(0x41) & 0x8000)) {   //a
-			char_position[0] -= 5;
-			drawchar_runl();
-			last = 'l';
-		}
-		else if (ground_right() == 0 && (GetAsyncKeyState(0x44) & 0x8000)) {  //d
-			char_position[0] += 5;
-			drawchar_runr();
-			last = 'r';
-		}
-		//静止
-		else if(last=='r'){
-			putimage(char_position[0], char_position[1], &chara1_right[1], NOTSRCERASE);
-			putimage(char_position[0], char_position[1], &chara1_right[0], SRCINVERT);
+		if (fight_count/ FIGHT_DELAY >=7) {    //未开始攻击
+			if ((GetAsyncKeyState(0x4B) & 0x8000)) {
+				fight_count = 0;
+			}
+			else if ((GetAsyncKeyState(VK_SPACE) & 0x8000)) {
+				char1_speed = -15;
+			}
+			else if (ground_left() == 0 && (GetAsyncKeyState(0x41) & 0x8000)) {   //a
+				char_position[0] -= 5;
+				drawchar_runl();
+				last = 'l';
+			}
+			else if (ground_right() == 0 && (GetAsyncKeyState(0x44) & 0x8000)) {  //d
+				char_position[0] += 5;
+				drawchar_runr();
+				last = 'r';
+			}
+			//静止
+			else if (last == 'r') {
+				putimage(char_position[0], char_position[1], &chara1_right[1], NOTSRCERASE);
+				putimage(char_position[0], char_position[1], &chara1_right[0], SRCINVERT);
+			}
+			else {
+				putimage(char_position[0], char_position[1], &chara1_left[1], NOTSRCERASE);
+				putimage(char_position[0], char_position[1], &chara1_left[0], SRCINVERT);
+			}
 		}
 		else {
-			putimage(char_position[0], char_position[1], &chara1_left[1], NOTSRCERASE);
-			putimage(char_position[0], char_position[1], &chara1_left[0], SRCINVERT);
+			fightn();
 		}
+		
 		jump_count = 0;
 	}
 	else {   //不在地上
