@@ -52,6 +52,8 @@ extern int screen_down;    //屏幕总共向下移动的距离  可用来计算分数 难度
 //敌人.cpp
 void rand_enemy(int ground_y, struct enemy* enemy);
 void enemy_init();
+int ghost_beat();
+int enemy1_beat();
 struct enemy {
 	int x;          //x坐标
 	int y;			//y坐标

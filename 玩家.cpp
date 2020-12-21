@@ -336,14 +336,5 @@ int die() {
 	if (char_position[1] > HIGH) {
 		return BLOOD_MAX;
 	}
-	for (int p = -30; p < 65;p++) {
-		for (int q=-10;q<60;q++) {
-			for (int i = 0; i < enemy1_max; i++) {
-				if (char_position[0] + p == enemy1fire1left_position[i][0] && char_position[1] + q == enemy1fire1left_position[i][1])
-					return 1;
-			}
-			
-		}
-	}
-	return 0;
+	return ghost_beat() + enemy1_beat();
 }

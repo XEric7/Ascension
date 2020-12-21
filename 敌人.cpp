@@ -77,3 +77,37 @@ void ghost() {
 		putimage(ghost_a[i].x, ghost_a[i].y, &ghost_p[dir][0], SRCINVERT);	
 	}
 }
+
+
+int ghost_beat() {
+	for (int p = 15; p < 65; p++) {
+		for (int q = -10; q < 60; q++) {
+			for (int i = 0; i < enemy1_max; i++) {
+				if (char_position[0] + p == ghost_a[i].x && char_position[1] + q == ghost_a[i].y) {
+					if (p < 40) {
+						char_position[0] += 50;
+					}
+					else {
+						char_position[0] -= 50;
+					}
+					char_position[1] -= 50;
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+int enemy1_beat() {
+	for (int p = -30; p < 65; p++) {
+		for (int q = -10; q < 60; q++) {
+			for (int i = 0; i < enemy1_max; i++) {
+				if (char_position[0] + p == enemy1fire1left_position[i][0] && char_position[1] + q == enemy1fire1left_position[i][1])
+					return 1;
+			}
+
+		}
+	}
+	return 0;
+}
