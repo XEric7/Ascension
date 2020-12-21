@@ -284,9 +284,9 @@ int gettool(int x, int y) {
 
 //判断是否在地上    1在地面上 0不在        模拟重力
 int ground_under(int x,int y) {
-	for (int i = 0; i < 20; i++) {
-		for (int q = 0; q < 30; q++) {
-			if (ground_position[x + 20 + q][y + 50 + i])
+	for (int i = 50; i < 70; i++) {
+		for (int q = 35; q < 68; q++) {
+			if (ground_position[x + q][y + i])
 				return 1;
 		}
 
@@ -296,9 +296,9 @@ int ground_under(int x,int y) {
 
 //判断角色上方是否有天花板  1为有 0为无
 int ground_below() {
-	for (int i = 0; i < 10; i++) {
-		for (int q = 0; q < 30; q++) {
-			if (ground_position[char_position[0] + 20 + q][char_position[1] - i])
+	for (int i = -3; i < 7; i++) {
+		for (int q = 40; q < 60; q++) {
+			if (ground_position[char_position[0] + q][char_position[1] - i])
 				return 1;
 		}
 	}
