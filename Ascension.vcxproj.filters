@@ -24,6 +24,9 @@
     <ClCompile Include="功能函数.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="敌人.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="通用.h">

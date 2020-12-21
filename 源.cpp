@@ -19,14 +19,15 @@ int enemy1fire1right_position[enemy1_max][2] = { 0 };        //右方向 x y坐标
 int tool1_position[2] = { WIDTH,HIGH };  //道具一位置
 int screen_down = 0;    //屏幕总共向下移动的距离  可用来计算分数 难度
 
+int lastground_x[2] = { 10,WIDTH - 10 };   //保存上一个地的位置
+
 int main() {
 	//初始化界面
 	init();
 	getimage_char();
-	int blood = blood_max;   //血量系统
+	int blood = BLOOD_MAX;   //血量系统
 	int blood_pluse = 0;     //无敌时间
 
-	int lastground_position[2] = { 10,WIDTH - 10 };
 
 
 	int top_ground = 750;   //记录最上方地板的y坐标  用于生成地面
@@ -37,6 +38,7 @@ int main() {
 
 		
 		drawenemy1();
+		enemy_control();    //敌人控制
 		drawheart(blood);
 		drawground();
 		drawtool1();
@@ -45,7 +47,7 @@ int main() {
 		
 
 		//道具一判定
-		if (blood < blood_max) {
+		if (blood < BLOOD_MAX) {
 			if (gettool(tool1_position[0], tool1_position[1])) {
 				blood++;
 				tool1_position[0] = WIDTH;
@@ -54,10 +56,10 @@ int main() {
 			
 		}
 		
-		enemy_control();    //敌人控制
+
 		if (top_ground > LEVEL) {
 			top_ground -= LEVEL;
-			random_ground(top_ground, lastground_position);
+			random_ground(top_ground);
 		}
 
 		//屏幕向下移动
@@ -115,7 +117,7 @@ void init() {
 		enemy1fire1right_position[i][1] = HIGH;
 	}
 
-	
+	enemy_init();
 }
 
 
@@ -140,7 +142,7 @@ void drawheart(int blood) {
 	loadimage(&heart_full[0], _T("heart_full_0.png"));
 	loadimage(&heart_full[1], _T("heart_full_1.png"));
 
-	for (int i = 0; i < blood_max; i++) {
+	for (int i = 0; i < BLOOD_MAX; i++) {
 		if (i < blood) {
 			putimage(40 * i + 20, 10, &heart_full[1], NOTSRCERASE);
 			putimage(40 * i + 20, 10, &heart_full[0], SRCINVERT);
@@ -186,25 +188,10 @@ void drawground() {
 }
 
 
-void enemy_control() {
-	//int enemy1fire1left_position[enemy1_max][2] = { 0 };
-	static int enemyfire1_speed=5;
-	if (screen_down > enemyfire1_speed*1000) {
-		enemyfire1_speed++;
-	}
-	for (int i = 0; i < enemy1_max; i++) {
-		if (enemy1fire1left_position[i][0] < -40&& enemy1_position[i][0]>200) {
-			enemy1fire1left_position[i][0] = enemy1_position[i][0]-20;
-		}
-		else if(enemy1fire1left_position[i][0] < -100){
-			enemy1fire1left_position[i][0] = enemy1_position[i][0] - 20;
-		}
-		enemy1fire1left_position[i][0] -= enemyfire1_speed;
-	}
-}
+
 
 //生成随机地面      输入要生成的高度 生成的位置  bool ground_position[WIDTH][HIGH] = {0}
-void random_ground(int y, int x[2]) {
+void random_ground(int y) {
 
 	int a, b;
 	const int max_jump = 200;
@@ -214,7 +201,7 @@ void random_ground(int y, int x[2]) {
 		if (a > b) {    //保证a<b
 			swap(&a, &b);
 		}
-	} while (a == b || x[0]-a > max_jump / 6 && b - x[1] > max_jump / 6 || x[0] - b > max_jump || a - x[1] > max_jump);     //防止随机生成导致无法跳上去
+	} while (a == b || lastground_x[0]-a > max_jump / 6 && b - lastground_x[1] > max_jump / 6 || lastground_x[0] - b > max_jump || a - lastground_x[1] > max_jump);     //防止随机生成导致无法跳上去
 	//printf("%d %d\n", a, b);
 	//生成地面
 	for (int i = a; i < b; i++) {
@@ -239,16 +226,7 @@ void random_ground(int y, int x[2]) {
 
 
 
-	//随机生成敌人
-	static int enemy1_count = 0;
-	if (enemy1_count >= enemy1_max) {
-		enemy1_count = 0;
-	}
-	enemy1_position[enemy1_count][0] = rand() % (b - a) + a;
-	enemy1_position[enemy1_count][1] = y - 63;
-	enemy1fire1left_position[enemy1_count][0] = enemy1_position[enemy1_count][0] - 20;
-	enemy1fire1left_position[enemy1_count][1] = enemy1_position[enemy1_count][1];
-	enemy1_count++;
+
 
 	//随机生成血包
 	static int tool1_count = 0;
@@ -262,11 +240,24 @@ void random_ground(int y, int x[2]) {
 		tool1_count--;
 	}
 
-
-
 	//保存生成的位置
-	x[0] = a;
-	x[1] = b;
+	lastground_x[0] = a;
+	lastground_x[1] = b;
+
+	//随机生成敌人
+	static int enemy1_count = 0;
+	if (enemy1_count >= enemy1_max) {
+		enemy1_count = 0;
+	}
+	enemy1_position[enemy1_count][0] = rand() % (b - a) + a;
+	enemy1_position[enemy1_count][1] = y - 63;
+	enemy1fire1left_position[enemy1_count][0] = enemy1_position[enemy1_count][0] - 20;
+	enemy1fire1left_position[enemy1_count][1] = enemy1_position[enemy1_count][1];
+
+	rand_enemy(y, ghost_a[enemy1_count].point);
+
+
+	enemy1_count++;
 }
 
 //将所有物体向下移动    y为向下移动的距离

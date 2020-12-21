@@ -317,7 +317,7 @@ int ground_right(void) {
 //ÅÐ¶ÏËÀÍö  ·µ»Ø-1ÎªËÀÍö
 int die() {
 	if (char_position[1] > HIGH) {
-		return blood_max;
+		return BLOOD_MAX;
 	}
 	for (int p = -30; p < 65;p++) {
 		for (int q=-10;q<60;q++) {

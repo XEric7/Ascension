@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="功能函数.cpp" />
+    <ClCompile Include="敌人.cpp" />
     <ClCompile Include="源.cpp" />
     <ClCompile Include="玩家.cpp" />
   </ItemGroup>
