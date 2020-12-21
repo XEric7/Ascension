@@ -131,8 +131,8 @@ void drawchar_runr() {
 	}
 
 	//∑≈÷√Õº∆¨
-	putimage(char_position[0], char_position[1], &chara1_runr[count/5][1], NOTSRCERASE);
-	putimage(char_position[0], char_position[1], &chara1_runr[count/5][0], SRCINVERT);
+	putimage(char_position[0], char_position[1]+12, &chara1_runr[count/5][1], NOTSRCERASE);
+	putimage(char_position[0], char_position[1]+12, &chara1_runr[count/5][0], SRCINVERT);
 	count++;
 }
 
@@ -143,8 +143,8 @@ void drawchar_runl() {
 	}
 
 	//∑≈÷√Õº∆¨
-	putimage(char_position[0], char_position[1], &chara1_runl[count / 5][1], NOTSRCERASE);
-	putimage(char_position[0], char_position[1], &chara1_runl[count / 5][0], SRCINVERT);
+	putimage(char_position[0]+40, char_position[1]+12, &chara1_runl[count / 5][1], NOTSRCERASE);
+	putimage(char_position[0]+40, char_position[1]+12, &chara1_runl[count / 5][0], SRCINVERT);
 	count++;
 }
 
@@ -157,35 +157,52 @@ void drawchar() {
 
 void draw_jump() {
 	const int JUMP_DELAY = 5;
-	int dir = (last == 'l' ? 0 : 1);
+	int dir, edit=0;
+	if (last == 'l'){
+		dir = 0;
+		edit += 40;
+	}
+	else {
+		dir = 1;
+		edit -= 12;
+	}
 	if (jump_count <2* JUMP_DELAY) {
-		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count/JUMP_DELAY][1], NOTSRCERASE);
-		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count/ JUMP_DELAY][0], SRCINVERT);
+		putimage(char_position[0]+edit, char_position[1], &chara1_jump[dir][jump_count/JUMP_DELAY][1], NOTSRCERASE);
+		putimage(char_position[0]+ edit, char_position[1], &chara1_jump[dir][jump_count/ JUMP_DELAY][0], SRCINVERT);
 		jump_count++;
 	}
 	else if (jump_count < 3* JUMP_DELAY) {
-		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count / JUMP_DELAY][1], NOTSRCERASE);
-		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count / JUMP_DELAY][0], SRCINVERT);
+		putimage(char_position[0]+ edit, char_position[1], &chara1_jump[dir][jump_count / JUMP_DELAY][1], NOTSRCERASE);
+		putimage(char_position[0]+ edit, char_position[1], &chara1_jump[dir][jump_count / JUMP_DELAY][0], SRCINVERT);
 		if (ground_under(char_position[0], char_position[1] + 100)) {
 			jump_count = 3* JUMP_DELAY;
 		}
 	}
 	else if (jump_count<5* JUMP_DELAY) {
-		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count/ JUMP_DELAY][1], NOTSRCERASE);
-		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count/ JUMP_DELAY][0], SRCINVERT);
+		putimage(char_position[0]+ edit, char_position[1], &chara1_jump[dir][jump_count/ JUMP_DELAY][1], NOTSRCERASE);
+		putimage(char_position[0]+ edit, char_position[1], &chara1_jump[dir][jump_count/ JUMP_DELAY][0], SRCINVERT);
 		jump_count++;
 	}
 	else if (jump_count >= 5* JUMP_DELAY) {
-		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count / JUMP_DELAY][1], NOTSRCERASE);
-		putimage(char_position[0], char_position[1], &chara1_jump[dir][jump_count / JUMP_DELAY][0], SRCINVERT);
+		putimage(char_position[0]+ edit, char_position[1], &chara1_jump[dir][jump_count / JUMP_DELAY][1], NOTSRCERASE);
+		putimage(char_position[0]+ edit, char_position[1], &chara1_jump[dir][jump_count / JUMP_DELAY][0], SRCINVERT);
 	}
 }
 
 //∆’Õ®π•ª˜
 void fightn() {
-	int dir = (last == 'l' ? 0 : 1);
-	putimage(char_position[0], char_position[1], &chara1_fightn[dir][fight_count/ FIGHT_DELAY][1], NOTSRCERASE);
-	putimage(char_position[0], char_position[1], &chara1_fightn[dir][fight_count/ FIGHT_DELAY][0], SRCINVERT);
+	int dir, edit = 0;
+	if (last == 'l') {
+		dir = 0;
+		edit -= 10;
+	}
+	else {
+		dir = 1;
+		edit -= 10;
+	}
+
+	putimage(char_position[0]+edit, char_position[1]-15, &chara1_fightn[dir][fight_count/ FIGHT_DELAY][1], NOTSRCERASE);
+	putimage(char_position[0]+edit, char_position[1]-15, &chara1_fightn[dir][fight_count/ FIGHT_DELAY][0], SRCINVERT);
 	fight_count++;
 }
 
@@ -221,8 +238,8 @@ void char_control() {
 				putimage(char_position[0], char_position[1], &chara1_right[0], SRCINVERT);
 			}
 			else {
-				putimage(char_position[0], char_position[1], &chara1_left[1], NOTSRCERASE);
-				putimage(char_position[0], char_position[1], &chara1_left[0], SRCINVERT);
+				putimage(char_position[0]+40, char_position[1], &chara1_left[1], NOTSRCERASE);
+				putimage(char_position[0]+40, char_position[1], &chara1_left[0], SRCINVERT);
 			}
 		}
 		else {
