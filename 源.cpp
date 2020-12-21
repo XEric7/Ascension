@@ -279,5 +279,6 @@ void everything_down(int y) {
 	for (int i = 0; i < enemy1_max; i++) {
 		enemy1_position[i][1] += y;
 		enemy1fire1left_position[i][1] += y;
+		ghost_a[i].y += y;
 	}
 }

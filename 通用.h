@@ -59,6 +59,7 @@ struct enemy {
 	int blood_max;  //最大血量
 	int blood;		//当前血量
 	struct enemy* point;
+	int speed;      //向右为正方向
 };
 
 extern struct enemy ghost_a[enemy1_max];
