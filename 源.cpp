@@ -213,7 +213,7 @@ void random_ground(int y) {
 		if (a > b) {    //保证a<b
 			swap(&a, &b);
 		}
-	} while (a == b || lastground_x[0]-a > max_jump / 6 && b - lastground_x[1] > max_jump / 6 || lastground_x[0] - b > max_jump || a - lastground_x[1] > max_jump);     //防止随机生成导致无法跳上去
+	} while (b-a<100 || lastground_x[0]-a > max_jump / 6 && b - lastground_x[1] > max_jump / 6 || lastground_x[0] - b > max_jump || a - lastground_x[1] > max_jump);     //防止随机生成导致无法跳上去
 	//printf("%d %d\n", a, b);
 	//生成地面
 	for (int i = a; i < b; i++) {
