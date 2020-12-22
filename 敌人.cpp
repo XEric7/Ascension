@@ -107,7 +107,7 @@ int ghost_beat() {
 }
 
 int enemy1_beat() {
-	for (int p = -30; p < 65; p++) {
+	for (int p = 0; p < 65; p++) {
 		for (int q = -10; q < 60; q++) {
 			for (int i = 0; i < enemy1_max; i++) {
 				if (char_position[0] + p == enemy1fire1left_position[i][0] && char_position[1] + q == enemy1fire1left_position[i][1])

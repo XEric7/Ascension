@@ -191,35 +191,48 @@ void draw_jump() {
 
 //ÆÕÍ¨¹¥»÷
 void fightn() {
-	int dir, edit = 0, dire = 0;
+	int dir, edit = 0;
 	if (last == 'l') {
 		dir = 0;
 		edit -= 10;
-		dire = -1;
-	}
-	else {
-		dir = 1;
-		edit -= 10;
-		dire = 1;
-	}
-
-	//¹¥»÷µÐÈË¼õÑª
-	if (fight_count == 4*FIGHT_DELAY) {
-		for (int p = -20; p < 50; p++) {
-			for (int q = -10; q < 60; q++) {
-				for (int i = 0; i < enemy1_max; i++) {
-					if (char_position[0] + p * dire == ghost_a[i].x && char_position[1] + q == ghost_a[i].y) {
-						ghost_a[i].blood -= 1;
-						ghost_a[i].x += 50 * dire;
-						if (ghost_a[i].blood == 0) {
-							rand_heart(ghost_a[i].x, ghost_a[i].y+20);
+		if (fight_count == 4 * FIGHT_DELAY) {
+			for (int p = -20; p < 50; p++) {
+				for (int q = -10; q < 60; q++) {
+					for (int i = 0; i < enemy1_max; i++) {
+						if (char_position[0] - p == ghost_a[i].x && char_position[1] + q == ghost_a[i].y) {
+							ghost_a[i].blood -= 1;
+							ghost_a[i].x -= 50;
+							if (ghost_a[i].blood == 0) {
+								rand_heart(ghost_a[i].x+50, ghost_a[i].y + 20);
+							}
+							goto OUTFIGHT;
 						}
-						goto OUTFIGHT;
 					}
 				}
 			}
 		}
 	}
+	else {
+		dir = 1;
+		edit -= 10;
+		if (fight_count == 4 * FIGHT_DELAY) {
+			for (int p = 60; p < 120; p++) {
+				for (int q = -10; q < 60; q++) {
+					for (int i = 0; i < enemy1_max; i++) {
+						if (char_position[0] + p == ghost_a[i].x && char_position[1] + q == ghost_a[i].y) {
+							ghost_a[i].blood -= 1;
+							ghost_a[i].x += 50;
+							if (ghost_a[i].blood == 0) {
+								rand_heart(ghost_a[i].x-50, ghost_a[i].y + 20);
+							}
+							goto OUTFIGHT;
+						}
+					}
+				}
+			}
+		}
+	}
+
 	OUTFIGHT:
 
 	putimage(char_position[0]+edit, char_position[1]-15, &chara1_fightn[dir][fight_count/ FIGHT_DELAY][1], NOTSRCERASE);
