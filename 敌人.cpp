@@ -17,6 +17,7 @@ void enemy_init() {
 		ghost_a[i].y = HIGH;
 		ghost_a[i].point = &ghost_a[i];
 		ghost_a[i].speed = (i==0? 1:ghost_a[i-1].speed);
+		ghost_a[i].blood_max = ghost_a[i].blood = 2;
 	}
 }
 
@@ -60,6 +61,7 @@ void getimage_enemy() {
 void rand_enemy(int ground_y, struct enemy* enemy) {
 	enemy->y = ground_y - enemy->high;
 	enemy->x = rand() % (lastground_x[1] - lastground_x[0]) + lastground_x[0];
+	enemy->blood = enemy->blood_max;
 }
 
 void enemy_go(struct enemy*enemy) {
@@ -73,16 +75,21 @@ void enemy_go(struct enemy*enemy) {
 void ghost() {
 	for (int i = 0; i < enemy1_max; i++) {
 		int dir = (ghost_a[i].speed >= 0 ? 1 : 0);
-		putimage(ghost_a[i].x, ghost_a[i].y, &ghost_p[dir][1], NOTSRCERASE);
-		putimage(ghost_a[i].x, ghost_a[i].y, &ghost_p[dir][0], SRCINVERT);	
+		if (ghost_a[i].blood > 0) {
+			putimage(ghost_a[i].x, ghost_a[i].y, &ghost_p[dir][1], NOTSRCERASE);
+			putimage(ghost_a[i].x, ghost_a[i].y, &ghost_p[dir][0], SRCINVERT);
+		}
 	}
 }
 
 
 int ghost_beat() {
-	for (int p = 15; p < 65; p++) {
-		for (int q = -10; q < 60; q++) {
-			for (int i = 0; i < enemy1_max; i++) {
+	for (int i = 0; i < enemy1_max; i++) {
+		if (ghost_a[i].blood <= 0) {
+			continue;
+		}
+		for (int p = 15; p < 65; p++) {
+			for (int q = -10; q < 60; q++) {
 				if (char_position[0] + p == ghost_a[i].x && char_position[1] + q == ghost_a[i].y) {
 					if (p < 40) {
 						char_position[0] += 50;
