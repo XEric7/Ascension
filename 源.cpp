@@ -16,7 +16,7 @@ bool ground_position[WIDTH][HIGH] = { 0 };      //   地板位置信息    [0]:x_posit
 int enemy1_position[enemy1_max][2] = { 0 };     //enemy1位置
 int enemy1fire1left_position[enemy1_max][2] = { 0 };      //enemy1 fire位置 左方向   x y坐标
 int enemy1fire1right_position[enemy1_max][2] = { 0 };        //右方向 x y坐标
-int tool1_position[2] = { WIDTH,HIGH };  //道具一位置
+int tool1_position[enemy1_max][2];  //道具一位置
 int screen_down = 0;    //屏幕总共向下移动的距离  可用来计算分数 难度
 
 int lastground_x[2] = { 10,WIDTH - 10 };   //保存上一个地的位置
@@ -48,11 +48,14 @@ int main() {
 
 		//道具一判定
 		if (blood < BLOOD_MAX) {
-			if (gettool(tool1_position[0], tool1_position[1])) {
-				blood++;
-				tool1_position[0] = WIDTH;
-				tool1_position[1] = HIGH;
+			for (int i = 0; i < enemy1_max; i++) {
+				if (gettool(tool1_position[i][0], tool1_position[i][1])) {
+					blood++;
+					tool1_position[i][0] = WIDTH;
+					tool1_position[i][1] = HIGH;
+				}
 			}
+			
 			
 		}
 		
@@ -117,6 +120,12 @@ void init() {
 		enemy1fire1right_position[i][1] = HIGH;
 	}
 
+	//血包
+	for (int i = 0; i < enemy1_max; i++) {
+		tool1_position[i][0] = WIDTH;
+		tool1_position[i][1] = HIGH;
+	}
+
 	enemy_init();
 }
 
@@ -125,8 +134,11 @@ void drawtool1(void) {
 	IMAGE tool[2];
 	loadimage(&tool[0], _T("tool_heart_0.png"));
 	loadimage(&tool[1], _T("tool_heart_1.png"));
-	putimage(tool1_position[0], tool1_position[1], &tool[1], NOTSRCERASE);
-	putimage(tool1_position[0], tool1_position[1], &tool[0], SRCINVERT);
+	for (int i = 0; i < enemy1_max; i++) {
+		putimage(tool1_position[i][0], tool1_position[i][1], &tool[1], NOTSRCERASE);
+		putimage(tool1_position[i][0], tool1_position[i][1], &tool[0], SRCINVERT);
+	}
+
 }
 void drawbackground() {
 	IMAGE bk;
@@ -227,18 +239,20 @@ void random_ground(int y) {
 
 
 
-
+	/*
 	//随机生成血包
 	static int tool1_count = 0;
 	if (tool1_count == 0) {
-		tool1_position[0] = rand() % (b - a) + a;
-		tool1_position[1] = y-20;
+		tool1_position[0][0] = rand() % (b - a) + a;
+		tool1_position[0][1] = y-20;
 
 		tool1_count = 10;
 	}
 	else {
 		tool1_count--;
 	}
+	*/
+
 
 	//保存生成的位置
 	lastground_x[0] = a;
@@ -263,7 +277,10 @@ void random_ground(int y) {
 //将所有物体向下移动    y为向下移动的距离
 void everything_down(int y) {
 	char_position[1] += y;
-	tool1_position[1] += y;
+	for (int i = 0; i < enemy1_max; i++) {
+		tool1_position[i][1] += y;
+	}
+
 	for (int q = HIGH - 1; q > HIGH - 1 - y; q--) {
 		for (int i = 0; i < WIDTH; i++) {      //将最下面的砖清零
 			ground_position[i][HIGH - 1] = 0;
@@ -281,4 +298,17 @@ void everything_down(int y) {
 		enemy1fire1left_position[i][1] += y;
 		ghost_a[i].y += y;
 	}
+}
+
+//  随机生成血包
+void rand_heart(int x,int y) {
+	static int count = 0;
+	if (count >= enemy1_max) {
+		count = 0;
+	}
+	if (50000 / (screen_down + 500) > rand() % 100) {
+		tool1_position[count][0] = x;
+		tool1_position[count][1] = y;
+	}
+	count++;
 }

@@ -205,12 +205,15 @@ void fightn() {
 
 	//¹¥»÷µÐÈË¼õÑª
 	if (fight_count == 4*FIGHT_DELAY) {
-		for (int p = 0; p < 150; p++) {
+		for (int p = -20; p < 50; p++) {
 			for (int q = -10; q < 60; q++) {
 				for (int i = 0; i < enemy1_max; i++) {
 					if (char_position[0] + p * dire == ghost_a[i].x && char_position[1] + q == ghost_a[i].y) {
 						ghost_a[i].blood -= 1;
 						ghost_a[i].x += 50 * dire;
+						if (ghost_a[i].blood == 0) {
+							rand_heart(ghost_a[i].x, ghost_a[i].y+20);
+						}
 						goto OUTFIGHT;
 					}
 				}

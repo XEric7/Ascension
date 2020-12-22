@@ -47,6 +47,7 @@ extern int char_position[2];         //角色位置信息
 extern int lastground_x[2];
 void random_ground(int y);
 extern int screen_down;    //屏幕总共向下移动的距离  可用来计算分数 难度
+void rand_heart(int x, int y);
 
 
 //敌人.cpp
