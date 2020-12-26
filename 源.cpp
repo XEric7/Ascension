@@ -10,6 +10,7 @@ IMAGE enemy1fire1left[2];
 IMAGE enemy1fire1right[2];     //镜像对称 制作
 
 
+
 //位置信息
 
 bool ground_position[WIDTH][HIGH] = { 0 };      //   地板位置信息    [0]:x_position  [1]:长度
@@ -18,12 +19,17 @@ int enemy1fire1left_position[enemy1_max][2] = { 0 };      //enemy1 fire位置 左方
 int enemy1fire1right_position[enemy1_max][2] = { 0 };        //右方向 x y坐标
 int tool1_position[enemy1_max][2];  //道具一位置
 int screen_down = 0;    //屏幕总共向下移动的距离  可用来计算分数 难度
+void startgame();    //显示开始游戏菜单
+void showrank();     //查看排行榜
+void setmusic();     //设置音乐
+void setgame();     //设置游戏参数
 
 int lastground_x[2] = { 10,WIDTH - 10 };   //保存上一个地的位置
 
 int main() {
 	//初始化界面
 	init();
+	startgame();
 	getimage_char();
 	int blood = BLOOD_MAX;   //血量系统
 	int blood_pluse = 0;     //无敌时间
@@ -129,6 +135,69 @@ void init() {
 	enemy_init();
 }
 
+
+void startgame() {
+	IMAGE start;
+	loadimage(&start, _T("picture\\start.png"), WIDTH, HIGH);
+	while (1) {
+		
+		putimage(0, 0, &start);
+		FlushBatchDraw();
+		if ((GetKeyState(VK_SPACE) & 0x8000)) {
+			break;
+		}
+		else if (GetKeyState(0x50) & 0x8000) {   //P:排行榜
+			showrank();
+		}
+		else if (GetKeyState(0x4D) & 0x8000) {   //M:音乐
+			setmusic();
+		}
+		else if (GetKeyState(0x4C) & 0x8000) {   //L：游戏参数
+			setgame();
+		}
+	}
+	
+	
+	
+}
+
+
+void setmusic() {
+	IMAGE setmusic;
+	loadimage(&setmusic, _T("picture\\setmusic.png"), WIDTH, HIGH);
+	while (1) {
+		putimage(0, 0, &setmusic);
+		if ((GetKeyState(0x30) & 0x8000)|| (GetKeyState(0x60) & 0x8000)) {   //0
+			mciSendString(_T("close bkmusic"), NULL, 0, NULL);
+			mciSendString(_T("open bkmusic.mp3 alias bkmusic"), NULL, 0, NULL);
+			mciSendString(_T("play bkmusic repeat"), NULL, 0, NULL);
+		}
+		else if ((GetKeyState(0x31) & 0x8000)|| (GetKeyState(0x61) & 0x8000)) {   //1:Es Rappelt Im Karton
+			mciSendString(_T("close bkmusic"), NULL, 0, NULL);
+			mciSendString(_T("open music\\bkmusic1.mp3 alias bkmusic"), NULL, 0, NULL);
+			mciSendString(_T("play bkmusic repeat"), NULL, 0, NULL);
+		}
+		else if ((GetKeyState(0x32) & 0x8000) || (GetKeyState(0x62) & 0x8000)) {   //2:Hello
+			mciSendString(_T("close bkmusic"), NULL, 0, NULL);
+			mciSendString(_T("open music\\bkmusic2.mp3 alias bkmusic"), NULL, 0, NULL);
+			mciSendString(_T("play bkmusic repeat"), NULL, 0, NULL);
+		}
+		else if ((GetKeyState(0x33) & 0x8000) || (GetKeyState(0x63) & 0x8000)) {    //3: Pacific Rim
+			mciSendString(_T("close bkmusic"), NULL, 0, NULL);
+			mciSendString(_T("open music\\bkmusic3.mp3 alias bkmusic"), NULL, 0, NULL);
+			mciSendString(_T("play bkmusic repeat"), NULL, 0, NULL);
+		}
+		else if ((GetKeyState(0x0D) & 0x8000)) {     //Enter: 退出
+			return;
+		}
+		FlushBatchDraw();
+	}
+}
+
+
+void setgame() {
+
+}
 
 void drawtool1(void) {
 	IMAGE tool[2];
@@ -311,4 +380,9 @@ void rand_heart(int x,int y) {
 		tool1_position[count][1] = y;
 	}
 	count++;
+}
+
+
+void showrank() {
+
 }

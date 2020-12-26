@@ -361,7 +361,6 @@ int ground_right(void) {
 
 		}
 	}
-
 	return 0;
 }
 
