@@ -39,7 +39,7 @@ void getimage_char();
 extern bool ground_position[WIDTH][HIGH];      //   地板位置信息    [0]:x_position  [1]:长度
 extern int enemy1_position[enemy1_max][2];     //enemy1位置
 extern int enemy1fire1left_position[enemy1_max][2];     //enemy1 fire位置 左方向   x y坐标
-extern int enemy1fire1right_position[enemy1_max][2];       //右方向 x y坐标
+//extern int enemy1fire1right_position[enemy1_max][2];       //右方向 x y坐标
 extern int char_position[2];         //角色位置信息
 
 
@@ -66,3 +66,7 @@ struct enemy {
 };
 
 extern struct enemy ghost_a[enemy1_max];
+
+
+//玩家.cpp
+extern void char_init();

@@ -19,12 +19,12 @@ struct Rank {
 
 //位置信息
 
-bool ground_position[WIDTH][HIGH] = { 0 };      //   地板位置信息    [0]:x_position  [1]:长度
-int enemy1_position[enemy1_max][2] = { 0 };     //enemy1位置
-int enemy1fire1left_position[enemy1_max][2] = { 0 };      //enemy1 fire位置 左方向   x y坐标
-int enemy1fire1right_position[enemy1_max][2] = { 0 };        //右方向 x y坐标
+bool ground_position[WIDTH][HIGH];      //   地板位置信息    [0]:x_position  [1]:长度
+int enemy1_position[enemy1_max][2];     //enemy1位置
+int enemy1fire1left_position[enemy1_max][2];      //enemy1 fire位置 左方向   x y坐标
+//int enemy1fire1right_position[enemy1_max][2] = { 0 };        //右方向 x y坐标
 int tool1_position[enemy1_max][2];  //道具一位置
-int screen_down = 0;    //屏幕总共向下移动的距离  可用来计算分数 难度
+int screen_down;    //屏幕总共向下移动的距离  可用来计算分数 难度
 int startgame();    //显示开始游戏菜单
 void showrank();     //查看排行榜
 void setmusic();     //设置音乐
@@ -117,8 +117,24 @@ int main() {
 
 //初始化 只在开始时执行
 void init() {
+	char_init();
+	srand(1);
 	mciSendString(_T("open  bkmusic.mp3 alias bkmusic") ,NULL, 0, NULL);
 	mciSendString(_T("play bkmusic repeat"), NULL, 0, NULL);
+	for (int m = 0; m < WIDTH; m++) {
+		for (int n = 0; n < HIGH; n++) {
+			ground_position[m][n] = 0;
+		}
+	}
+	for (int i = 0; i < enemy1_max; i++) {
+		enemy1_position[i][0] = 0;
+		enemy1_position[i][1] = 0;
+		enemy1fire1left_position[i][0] = 0;
+		enemy1fire1left_position[i][1] = 0;
+		tool1_position[i][0] = 0;
+		tool1_position[i][1] = 0;
+		screen_down = 0;
+	}
 	initgraph(WIDTH, HIGH);
 	BeginBatchDraw();
 	for (int i = 10; i < WIDTH - 10; i++) {     //绘制最下方的地板
@@ -133,7 +149,7 @@ void init() {
 	for (int i = 0; i < enemy1_max;i++) {
 		enemy1_position[i][1] = HIGH;
 		enemy1fire1left_position[i][1] = HIGH;
-		enemy1fire1right_position[i][1] = HIGH;
+		//enemy1fire1right_position[i][1] = HIGH;
 	}
 
 	//血包
@@ -459,7 +475,8 @@ int showscore() {
 	printf("\n请输入您的用户名：");
 	struct Rank new_rank;
 	while ((scanf("%20[^\n]", &new_rank.name) != 1)) {
-		printf("输入格式有误，请重新输入");
+		getchar();        //将缓冲区的\n读掉
+		printf("输入格式有误，请重新输入:");
 	}
 	new_rank.score = screen_down;
 

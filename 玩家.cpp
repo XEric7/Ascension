@@ -9,17 +9,25 @@ IMAGE chara1_jump[2][6][2];  //0左1右
 IMAGE chara1_fightn[2][7][2];   //普攻
 
 //角色位置信息
-int char_position[2] = { 100,680 };
+int char_position[2];
 
 void drawchar_runr();
 void drawchar_runl();
 void draw_jump();
 void fightn();   //普通攻击
 #define FIGHT_DELAY 3
-int fight_count =6* FIGHT_DELAY;
+int fight_count;
 
-int jump_count = 0;
-static char last = 'r';  //判断上一时刻状态  
+int jump_count;
+static char last;  //判断上一时刻状态  
+
+void char_init(){
+	char_position[0] = 100;
+	char_position[1] = 680;
+	fight_count = 6 * FIGHT_DELAY;
+	jump_count = 0;
+	last = 'r';
+}
 
 void getimage_char() {
 	//向右奔跑

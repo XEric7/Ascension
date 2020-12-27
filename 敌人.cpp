@@ -5,11 +5,14 @@ void ghost();
 void enemy_go(struct enemy* enemy);
 
 
+int enemyfire1_speed;
+
 //ghost
 IMAGE ghost_p[2][2];
 struct enemy ghost_a[enemy1_max];
 
 void enemy_init() {
+	enemyfire1_speed = 5;
 	getimage_enemy();
 	for (int i = 0; i < enemy1_max; i++) {
 		ghost_a[i].high = 45;
@@ -24,7 +27,7 @@ void enemy_init() {
 void enemy_control() {
 	//³õÊ¼´úÂë
 	//int enemy1fire1left_position[enemy1_max][2] = { 0 };
-	static int enemyfire1_speed = 5;
+	enemyfire1_speed = 5;
 	if (screen_down > enemyfire1_speed * 1000) {
 		enemyfire1_speed++;
 	}
