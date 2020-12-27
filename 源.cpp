@@ -1,5 +1,6 @@
 #include"通用.h"
 
+int showscore();
 
 //数组坐标以x y顺序（不同与传统先行后列）
 #pragma comment(lib,"Winmm.lib")
@@ -9,7 +10,12 @@ IMAGE enemy1[2];
 IMAGE enemy1fire1left[2];
 IMAGE enemy1fire1right[2];     //镜像对称 制作
 
-
+struct Rank {
+	char name[20];    //名字
+	int score;        //分数
+	int right;        //效验码
+	struct Rank* next;
+};
 
 //位置信息
 
@@ -19,7 +25,7 @@ int enemy1fire1left_position[enemy1_max][2] = { 0 };      //enemy1 fire位置 左方
 int enemy1fire1right_position[enemy1_max][2] = { 0 };        //右方向 x y坐标
 int tool1_position[enemy1_max][2];  //道具一位置
 int screen_down = 0;    //屏幕总共向下移动的距离  可用来计算分数 难度
-void startgame();    //显示开始游戏菜单
+int startgame();    //显示开始游戏菜单
 void showrank();     //查看排行榜
 void setmusic();     //设置音乐
 void setgame();     //设置游戏参数
@@ -28,8 +34,11 @@ int lastground_x[2] = { 10,WIDTH - 10 };   //保存上一个地的位置
 
 int main() {
 	//初始化界面
+	START:
 	init();
-	startgame();
+	if (startgame()) {
+		goto START;
+	}
 	getimage_char();
 	int blood = BLOOD_MAX;   //血量系统
 	int blood_pluse = 0;     //无敌时间
@@ -99,9 +108,10 @@ int main() {
 		
 	}
 	EndBatchDraw();
-	printf("Game over\n");
-	printf("你的分数：%d", screen_down);
-	Sleep(100);
+	closegraph();
+	if (showscore() == 1) {
+		goto START;
+	}
 	return 0;
 }
 
@@ -135,8 +145,8 @@ void init() {
 	enemy_init();
 }
 
-
-void startgame() {
+//返回1重新运行
+int startgame() {
 	IMAGE start;
 	loadimage(&start, _T("picture\\start.png"), WIDTH, HIGH);
 	while (1) {
@@ -147,7 +157,9 @@ void startgame() {
 			break;
 		}
 		else if (GetKeyState(0x50) & 0x8000) {   //P:排行榜
+			closegraph();
 			showrank();
+			return 1;
 		}
 		else if (GetKeyState(0x4D) & 0x8000) {   //M:音乐
 			setmusic();
@@ -156,9 +168,7 @@ void startgame() {
 			setgame();
 		}
 	}
-	
-	
-	
+	return 0;
 }
 
 
@@ -382,7 +392,106 @@ void rand_heart(int x,int y) {
 	count++;
 }
 
-
 void showrank() {
+	FILE* rk;
+	rk = fopen("rank", "r");
+	struct Rank* head = NULL;
+	struct Rank* prank;
+	int count=0;
+	while (1) {
+		while ((prank = (struct Rank*)malloc(sizeof(struct Rank))) == NULL);
+		if (fread(prank, sizeof(struct Rank), 1, rk) == 0) {
+			break;
+		}
+		count++;
+		if (count == 1) {
+			prank->next = NULL;
+			head = prank;
+		}
+		else if(prank->score>=head->score){
+			prank->next = head;
+			head = prank;
+		}
+		else {
+			struct Rank* ptr1=head;
+			struct Rank* ptr2=head->next;
+			while (1) {
+				if (ptr2 == NULL) {
+					ptr1->next = prank;
+					prank->next = NULL;
+					break;
+				}
+				if (ptr1->score >= prank->score && prank->score >= ptr2->score) {
+					ptr1->next = prank;
+					prank->next = ptr2;
+					break;
+				}
+				ptr1 = ptr1->next;
+				ptr2 = ptr2->next;
+			}
+		}
+	}
+	fclose(rk);
+	system("cls");
+	if (count == 0) {
+		printf("无排行榜信息\n");
+	}
+	else {
+		prank = head;
+		printf("%20s\t%5s\n", "用户名", "分数");
+		do {
+			printf("%20s\t%5d\n",prank->name,prank->score);
+		} while ((prank=prank->next)!=NULL);
+	}
+	printf("按Enter键继续\n");
+	while (_getch() != 13);
+	
+}
 
+
+//返回1：重新开始游戏
+int showscore() {
+	system("cls");
+	printf("Game over\n");
+	printf("你的分数：%d", screen_down);
+	Sleep(1000);
+	printf("\n请输入您的用户名：");
+	struct Rank new_rank;
+	while ((scanf("%20s", &new_rank.name) != 1)) {
+		printf("输入格式有误，请重新输入");
+	}
+	new_rank.score = screen_down;
+
+	//计算效验码
+	new_rank.right = 0;
+	for (int i = 0; i < 20; i++) {
+		new_rank.right += new_rank.name[i] ^ new_rank.score;
+	}
+
+
+	//写入分数
+
+	FILE* rk;
+	if (((rk = fopen("rank", "a")) != NULL)) {
+		if ((fwrite(&new_rank, sizeof(struct Rank), 1, rk) == 1)) {
+			printf("\n排行榜写入成功\n");
+		}
+		else {
+			printf("\n排行榜写入失败\n");
+		}
+		fclose(rk);
+	}
+	else {
+		printf("\n排行榜写入失败\n");
+	}
+	char input;
+	while (1) {
+		printf("按R查看排行榜信息，按A重新开始游戏，按其他键退出游戏\n");
+		input = tolower(_getch());
+		switch (input) {
+		case 'r':showrank(); break;
+		case 'a':return 1;
+		default:return 0;
+	}
+	}
 }
