@@ -453,11 +453,12 @@ void showrank() {
 int showscore() {
 	system("cls");
 	printf("Game over\n");
-	printf("你的分数：%d", screen_down);
-	Sleep(1000);
+	printf("你的分数：%d\n", screen_down);
+	printf("按回车键继续\n");
+	while (_getch() != 13);
 	printf("\n请输入您的用户名：");
 	struct Rank new_rank;
-	while ((scanf("%20s", &new_rank.name) != 1)) {
+	while ((scanf("%20[^\n]", &new_rank.name) != 1)) {
 		printf("输入格式有误，请重新输入");
 	}
 	new_rank.score = screen_down;
