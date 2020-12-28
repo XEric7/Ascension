@@ -440,50 +440,63 @@ void showrank() {
 	//文件读取
 	FILE* rk;
 	rk = fopen("rank", "r");
+	int count = 0;
 	struct Rank* head = NULL;
 	struct Rank* prank;
-	int count=0;
-	while (1) {
-		while ((prank = (struct Rank*)malloc(sizeof(struct Rank))) == NULL);
-		if (fread(prank, sizeof(struct Rank), 1, rk) == 0) {
-			break;
-		}
-		count++;
-		if (count == 1) {
-			prank->next = NULL;
-			head = prank;
-		}
-		else if(prank->rank>=head->rank){
-			prank->next = head;
-			head = prank;
-		}
-		else {
-			struct Rank* ptr1=head;
-			struct Rank* ptr2=head->next;
-			while (1) {
-				if (ptr2 == NULL) {
-					ptr1->next = prank;
-					prank->next = NULL;
-					break;
+	if (rk != NULL) {
+		while (1) {
+			while ((prank = (struct Rank*)malloc(sizeof(struct Rank))) == NULL);
+			if (fread(prank, sizeof(struct Rank), 1, rk) == 0) {
+				break;
+			}
+			/*
+			//检测效验码
+			int right = 0;
+			for (int i = 0; i < 20; i++) {
+				right += prank->name[i] ^ prank->rank;
+			}
+			right += (prank->blood + prank->randmap);
+
+			if (right != prank->right) {
+				continue;
+			}
+			*/
+			count++;
+			if (count == 1) {
+				prank->next = NULL;
+				head = prank;
+			}
+			else if (prank->rank >= head->rank) {
+				prank->next = head;
+				head = prank;
+			}
+			else {
+				struct Rank* ptr1 = head;
+				struct Rank* ptr2 = head->next;
+				while (1) {
+					if (ptr2 == NULL) {
+						ptr1->next = prank;
+						prank->next = NULL;
+						break;
+					}
+					if (ptr1->rank >= prank->rank && prank->rank >= ptr2->rank) {
+						ptr1->next = prank;
+						prank->next = ptr2;
+						break;
+					}
+					ptr1 = ptr1->next;
+					ptr2 = ptr2->next;
 				}
-				if (ptr1->rank >= prank->rank && prank->rank >= ptr2->rank) {
-					ptr1->next = prank;
-					prank->next = ptr2;
-					break;
-				}
-				ptr1 = ptr1->next;
-				ptr2 = ptr2->next;
 			}
 		}
+		fclose(rk);
 	}
-	fclose(rk);
-	system("cls");
+
 
 	//排行榜绘制
 	IMAGE img_rank;
 	loadimage(&img_rank, _T("picture\\rank.png"), WIDTH, HIGH);
 	setbkmode(TRANSPARENT);
-	while (1) {
 		putimage(0, 0, &img_rank);
 		if (count == 0) {   //无排行榜信息
 			settextstyle(50, 0, _T("Consolas"));
@@ -516,17 +529,15 @@ void showrank() {
 				else {
 					outtextxy(1350, 200 + 50 * i, _T("否"));
 				}
-				prank = prank->next;
+  				prank = prank->next;
 			}
-			/*do {
-				printf("%20s\t%5d\n", prank->name, prank->score);
-			} while ((prank = prank->next) != NULL);*/
 		}
 		FlushBatchDraw();
-		if ((GetKeyState(0x1B) & 0x8000)) {
-			break;
+		while (1) {
+			if ((GetKeyState(0x1B) & 0x8000)) {
+				break;
+			}
 		}
-	}
 }
 
 
