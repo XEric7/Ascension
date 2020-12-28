@@ -31,6 +31,7 @@ void setmusic();     //设置音乐
 void setgame();     //设置游戏参数
 
 int lastground_x[2] = { 10,WIDTH - 10 };   //保存上一个地的位置
+int char_blood_max = 5;
 
 int main() {
 	//初始化界面
@@ -40,7 +41,7 @@ int main() {
 		goto START;
 	}
 	getimage_char();
-	int blood = BLOOD_MAX;   //血量系统
+	int blood = char_blood_max;   //血量系统
 	int blood_pluse = 0;     //无敌时间
 
 
@@ -62,7 +63,7 @@ int main() {
 		
 
 		//道具一判定
-		if (blood < BLOOD_MAX) {
+		if (blood < char_blood_max) {
 			for (int i = 0; i < enemy1_max; i++) {
 				if (gettool(tool1_position[i][0], tool1_position[i][1])) {
 					blood++;
@@ -222,7 +223,27 @@ void setmusic() {
 
 
 void setgame() {
-
+	IMAGE setgame;
+	loadimage(&setgame, _T("picture\\setgame.png"), WIDTH, HIGH);
+	while (1) {
+		putimage(0, 0, &setgame);
+		
+		if ((GetKeyState(0x30) & 0x8000) || (GetKeyState(0x60) & 0x8000)) {   //0:   随机地图
+			srand(time(NULL));
+		}
+		for (int i = 1; i <= 9; i++) {
+			int a = i + 48;
+			int b = i + 96;
+			if ((GetKeyState(a) & 0x8000) || (GetKeyState(b) & 0x8000)) {   //设置血量
+				char_blood_max = i;
+			}
+		}
+		drawheart(char_blood_max);
+		FlushBatchDraw();
+		if ((GetKeyState(0x0D) & 0x8000)) {   //enter:退出
+			break;
+		}
+	}
 }
 
 void drawtool1(void) {
@@ -235,6 +256,7 @@ void drawtool1(void) {
 	}
 
 }
+
 void drawbackground() {
 	IMAGE bk;
 	loadimage(&bk, _T("bk.jpg"));
@@ -249,7 +271,7 @@ void drawheart(int blood) {
 	loadimage(&heart_full[0], _T("heart_full_0.png"));
 	loadimage(&heart_full[1], _T("heart_full_1.png"));
 
-	for (int i = 0; i < BLOOD_MAX; i++) {
+	for (int i = 0; i < char_blood_max; i++) {
 		if (i < blood) {
 			putimage(40 * i + 20, 10, &heart_full[1], NOTSRCERASE);
 			putimage(40 * i + 20, 10, &heart_full[0], SRCINVERT);

@@ -7,11 +7,11 @@
 #include<Windows.h>
 #include<stdlib.h>
 #include<string.h>
+#include<time.h>
 #define LEVEL 200           //层高
 #define WIDTH 1500
 #define HIGH 800
 #define enemy1_max 5
-#define BLOOD_MAX 5
 
 //函数声明
 void drawbackground(void);
@@ -48,6 +48,7 @@ extern int lastground_x[2];
 void random_ground(int y);
 extern int screen_down;    //屏幕总共向下移动的距离  可用来计算分数 难度
 void rand_heart(int x, int y);
+extern int char_blood_max;
 
 
 //敌人.cpp
