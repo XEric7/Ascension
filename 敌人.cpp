@@ -27,7 +27,6 @@ void enemy_init() {
 void enemy_control() {
 	//³õÊ¼´úÂë
 	//int enemy1fire1left_position[enemy1_max][2] = { 0 };
-	enemyfire1_speed = 5;
 	if (screen_down > enemyfire1_speed * 1000) {
 		enemyfire1_speed++;
 	}

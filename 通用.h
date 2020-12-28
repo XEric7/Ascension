@@ -8,6 +8,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include<time.h>
+#include "atlstr.h"
 #define LEVEL 200           //²ã¸ß
 #define WIDTH 1500
 #define HIGH 800

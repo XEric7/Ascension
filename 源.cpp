@@ -13,6 +13,9 @@ IMAGE enemy1fire1right[2];     //镜像对称 制作
 struct Rank {
 	char name[20];    //名字
 	int score;        //分数
+	int blood;        //血量
+	bool randmap;     //随机地图
+	int rank;         //用于排序
 	int right;        //效验码
 	struct Rank* next;
 };
@@ -29,11 +32,14 @@ int startgame();    //显示开始游戏菜单
 void showrank();     //查看排行榜
 void setmusic();     //设置音乐
 void setgame();     //设置游戏参数
+struct Rank new_rank;  //存档
 
 int lastground_x[2] = { 10,WIDTH - 10 };   //保存上一个地的位置
 int char_blood_max = 5;
 
 int main() {
+	BEGIN:
+	new_rank.randmap = 0;
 	//初始化界面
 	START:
 	init();
@@ -111,7 +117,7 @@ int main() {
 	EndBatchDraw();
 	closegraph();
 	if (showscore() == 1) {
-		goto START;
+		goto BEGIN;
 	}
 	return 0;
 }
@@ -174,7 +180,6 @@ int startgame() {
 			break;
 		}
 		else if (GetKeyState(0x50) & 0x8000) {   //P:排行榜
-			closegraph();
 			showrank();
 			return 1;
 		}
@@ -214,7 +219,7 @@ void setmusic() {
 			mciSendString(_T("open music\\bkmusic3.mp3 alias bkmusic"), NULL, 0, NULL);
 			mciSendString(_T("play bkmusic repeat"), NULL, 0, NULL);
 		}
-		else if ((GetKeyState(0x0D) & 0x8000)) {     //Enter: 退出
+		else if ((GetKeyState(0x1B) & 0x8000)) {     //Esc: 退出
 			return;
 		}
 		FlushBatchDraw();
@@ -230,6 +235,7 @@ void setgame() {
 		
 		if ((GetKeyState(0x30) & 0x8000) || (GetKeyState(0x60) & 0x8000)) {   //0:   随机地图
 			srand(time(NULL));
+			new_rank.randmap = 1;
 		}
 		for (int i = 1; i <= 9; i++) {
 			int a = i + 48;
@@ -240,7 +246,7 @@ void setgame() {
 		}
 		drawheart(char_blood_max);
 		FlushBatchDraw();
-		if ((GetKeyState(0x0D) & 0x8000)) {   //enter:退出
+		if ((GetKeyState(0x1B) & 0x8000)) {   //Esc:退出
 			break;
 		}
 	}
@@ -431,6 +437,7 @@ void rand_heart(int x,int y) {
 }
 
 void showrank() {
+	//文件读取
 	FILE* rk;
 	rk = fopen("rank", "r");
 	struct Rank* head = NULL;
@@ -446,7 +453,7 @@ void showrank() {
 			prank->next = NULL;
 			head = prank;
 		}
-		else if(prank->score>=head->score){
+		else if(prank->rank>=head->rank){
 			prank->next = head;
 			head = prank;
 		}
@@ -459,7 +466,7 @@ void showrank() {
 					prank->next = NULL;
 					break;
 				}
-				if (ptr1->score >= prank->score && prank->score >= ptr2->score) {
+				if (ptr1->rank >= prank->rank && prank->rank >= ptr2->rank) {
 					ptr1->next = prank;
 					prank->next = ptr2;
 					break;
@@ -471,19 +478,55 @@ void showrank() {
 	}
 	fclose(rk);
 	system("cls");
-	if (count == 0) {
-		printf("无排行榜信息\n");
+
+	//排行榜绘制
+	IMAGE img_rank;
+	loadimage(&img_rank, _T("picture\\rank.png"), WIDTH, HIGH);
+	setbkmode(TRANSPARENT);
+	while (1) {
+		putimage(0, 0, &img_rank);
+		if (count == 0) {   //无排行榜信息
+			settextstyle(50, 0, _T("Consolas"));
+			settextcolor(BLACK);
+			outtextxy(600,HIGH/2,_T("无排行榜信息"));
+		}
+		else {     //链表输出
+			prank = head;
+			settextstyle(40, 0, _T("Consolas"));
+			settextcolor(BLACK);
+			TCHAR top_rank[3];
+			//TCHAR outname[20];   //名字
+			TCHAR outscore[10];  //分数
+			TCHAR outblood[2];   //血量
+			for (int i = 1; i <= count; i++) {   //输出排行榜 且不超出最大输入范围
+				_stprintf(top_rank, _T("%d"), i);
+				//_stprintf(outname, L"%s", prank->name);
+				USES_CONVERSION;
+				TCHAR* outname = A2T(prank->name);    //转换未unicode
+				_stprintf(outscore, _T("%d"), prank->score);
+				_stprintf(outblood, _T("%d"), prank->blood);
+				_stprintf(top_rank, _T("%d"), i);
+				outtextxy(50, 200+50*i, top_rank);   //排名
+				outtextxy(230, 200 + 50 * i, outname);   //名字
+				outtextxy(980, 200 + 50 * i, outscore);     //分数
+				outtextxy(1200, 200 + 50 * i, outblood);
+				if (prank->randmap) {   //地图随机
+					outtextxy(1350, 200 + 50 * i, _T("是"));
+				}
+				else {
+					outtextxy(1350, 200 + 50 * i, _T("否"));
+				}
+				prank = prank->next;
+			}
+			/*do {
+				printf("%20s\t%5d\n", prank->name, prank->score);
+			} while ((prank = prank->next) != NULL);*/
+		}
+		FlushBatchDraw();
+		if ((GetKeyState(0x1B) & 0x8000)) {
+			break;
+		}
 	}
-	else {
-		prank = head;
-		printf("%20s\t%5s\n", "用户名", "分数");
-		do {
-			printf("%20s\t%5d\n",prank->name,prank->score);
-		} while ((prank=prank->next)!=NULL);
-	}
-	printf("按Enter键继续\n");
-	while (_getch() != 13);
-	
 }
 
 
@@ -495,19 +538,24 @@ int showscore() {
 	printf("按回车键继续\n");
 	while (_getch() != 13);
 	printf("\n请输入您的用户名：");
-	struct Rank new_rank;
+
 	while ((scanf("%20[^\n]", &new_rank.name) != 1)) {
 		getchar();        //将缓冲区的\n读掉
 		printf("输入格式有误，请重新输入:");
 	}
 	new_rank.score = screen_down;
+	new_rank.blood = char_blood_max;
+	new_rank.rank = screen_down / char_blood_max;
+	if (new_rank.randmap) {
+		new_rank.rank *= 1.2;
+	}
 
 	//计算效验码
 	new_rank.right = 0;
 	for (int i = 0; i < 20; i++) {
-		new_rank.right += new_rank.name[i] ^ new_rank.score;
+		new_rank.right += new_rank.name[i] ^ new_rank.rank;
 	}
-
+	new_rank.right += (new_rank.blood + new_rank.randmap);
 
 	//写入分数
 
@@ -526,10 +574,9 @@ int showscore() {
 	}
 	char input;
 	while (1) {
-		printf("按R查看排行榜信息，按A重新开始游戏，按其他键退出游戏\n");
+		printf("按A返回主菜单，按其他键退出游戏\n");
 		input = tolower(_getch());
 		switch (input) {
-		case 'r':showrank(); break;
 		case 'a':return 1;
 		default:return 0;
 	}
