@@ -35,6 +35,7 @@ int char_blood_max = 5;
 
 int main() {
 	BEGIN:
+	srand(1);
 	new_rank.randmap = 0;
 	//初始化界面
 	START:
@@ -119,7 +120,6 @@ int main() {
 //初始化 只在开始时执行
 void init() {
 	char_init();
-	srand(1);
 	mciSendString(_T("open  bkmusic.mp3 alias bkmusic") ,NULL, 0, NULL);
 	mciSendString(_T("play bkmusic repeat"), NULL, 0, NULL);
 	for (int m = 0; m < WIDTH; m++) {
