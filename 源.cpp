@@ -6,9 +6,7 @@ int showscore();
 #pragma comment(lib,"Winmm.lib")
 
 
-IMAGE enemy1[2];
-IMAGE enemy1fire1left[2];
-IMAGE enemy1fire1right[2];     //镜像对称 制作
+
 
 struct Rank {
 	char name[20];    //名字
@@ -58,9 +56,8 @@ int main() {
 		drawbackground();
 		char_control();    //角色控制
 
-		
-		drawenemy1();
 		enemy_control();    //敌人控制
+		drawenemy1();
 		drawheart(blood);
 		drawground();
 		drawtool1();
@@ -290,21 +287,7 @@ void drawheart(int blood) {
 }
 
 
-void drawenemy1(void) {
-	//怪
-	loadimage(&enemy1[0], _T("enemy1_0.png"));
-	loadimage(&enemy1[1], _T("enemy1_1.png"));
 
-	//fire
-	loadimage(&enemy1fire1left[0], _T("enemy1fire1_0.png"));
-	loadimage(&enemy1fire1left[1], _T("enemy1fire1_1.png"));
-	for (int i = 0; i < enemy1_max; i++) {
-		putimage(enemy1_position[i][0], enemy1_position[i][1], &enemy1[1], NOTSRCERASE);
-		putimage(enemy1_position[i][0], enemy1_position[i][1], &enemy1[0], SRCINVERT);
-		putimage(enemy1fire1left_position[i][0], enemy1fire1left_position[i][1], &enemy1fire1left[1], NOTSRCERASE);
-		putimage(enemy1fire1left_position[i][0], enemy1fire1left_position[i][1], &enemy1fire1left[0], SRCINVERT);
-	}
-}
 
 //显示初始地面
 void drawground() {

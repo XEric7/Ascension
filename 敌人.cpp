@@ -9,6 +9,9 @@ int enemyfire1_speed;
 
 //ghost
 IMAGE ghost_p[2][2];
+IMAGE enemy1[2];
+IMAGE enemy1fire1left[2];
+IMAGE enemy1fire1right[2];     //¾µÏñ¶Ô³Æ ÖÆ×÷
 struct enemy ghost_a[enemy1_max];
 
 void enemy_init() {
@@ -119,4 +122,21 @@ int enemy1_beat() {
 		}
 	}
 	return 0;
+}
+
+
+void drawenemy1(void) {
+	//¹Ö
+	loadimage(&enemy1[0], _T("enemy1_0.png"));
+	loadimage(&enemy1[1], _T("enemy1_1.png"));
+
+	//fire
+	loadimage(&enemy1fire1left[0], _T("enemy1fire1_0.png"));
+	loadimage(&enemy1fire1left[1], _T("enemy1fire1_1.png"));
+	for (int i = 0; i < enemy1_max; i++) {
+		putimage(enemy1_position[i][0], enemy1_position[i][1], &enemy1[1], NOTSRCERASE);
+		putimage(enemy1_position[i][0], enemy1_position[i][1], &enemy1[0], SRCINVERT);
+		putimage(enemy1fire1left_position[i][0], enemy1fire1left_position[i][1], &enemy1fire1left[1], NOTSRCERASE);
+		putimage(enemy1fire1left_position[i][0], enemy1fire1left_position[i][1], &enemy1fire1left[0], SRCINVERT);
+	}
 }

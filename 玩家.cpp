@@ -156,12 +156,14 @@ void drawchar_runl() {
 	count++;
 }
 
+/*
 void drawchar() {
 	loadimage(&chara1[0], _T("picture\\chara1_0.png"));
 	loadimage(&chara1[1], _T("picture\\chara1_1.png"));
 	putimage(char_position[0], char_position[1], &chara1[1], NOTSRCERASE);
 	putimage(char_position[0], char_position[1], &chara1[0], SRCINVERT);
 }
+*/
 
 void draw_jump() {
 	const int JUMP_DELAY = 5;

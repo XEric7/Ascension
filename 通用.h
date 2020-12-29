@@ -26,7 +26,7 @@ int die(void);
 void init();
 void swap(int* a, int* b);
 void enemy_control();
-void drawchar();
+//void drawchar();
 void drawenemy1(void);
 void drawheart(int blood);
 int ground_left(void);
