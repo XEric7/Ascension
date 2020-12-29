@@ -5,9 +5,6 @@ int showscore();
 //数组坐标以x y顺序（不同与传统先行后列）
 #pragma comment(lib,"Winmm.lib")
 
-
-
-
 struct Rank {
 	char name[20];    //名字
 	int score;        //分数
@@ -31,6 +28,7 @@ void showrank();     //查看排行榜
 void setmusic();     //设置音乐
 void setgame();     //设置游戏参数
 struct Rank new_rank;  //存档
+void about();
 
 int lastground_x[2] = { 10,WIDTH - 10 };   //保存上一个地的位置
 int char_blood_max = 5;
@@ -185,6 +183,9 @@ int startgame() {
 		else if (GetKeyState(0x4C) & 0x8000) {   //L：游戏参数
 			setgame();
 		}
+		else if (GetKeyState(0x41) & 0x8000) {   //关于
+			about();
+		}
 	}
 	return 0;
 }
@@ -285,9 +286,6 @@ void drawheart(int blood) {
 	}
 }
 
-
-
-
 //显示初始地面
 void drawground() {
 	IMAGE brick[2];
@@ -303,8 +301,6 @@ void drawground() {
 		}
 	}
 }
-
-
 
 
 //生成随机地面      输入要生成的高度 生成的位置  bool ground_position[WIDTH][HIGH] = {0}
@@ -599,4 +595,64 @@ int showscore() {
 	}
 
 	return 1;
+}
+
+void about() {
+	IMAGE img_about;
+	loadimage(&img_about, _T("picture\\about.png"), WIDTH, HIGH);
+	setbkmode(TRANSPARENT);
+	settextstyle(50, 0, _T("Consolas"));
+	settextcolor(RED);
+	for (int i = 0; i < 1100; i++) {
+		putimage(0, 0, &img_about);
+		outtextxy(310, HIGH-i/2, _T("制作人：龚昱嘉"));
+		FlushBatchDraw();
+	}
+	for (int i = 0; i < 1100; i++) {
+		putimage(0, 0, &img_about);
+		outtextxy(310, HIGH - 1100 / 2, _T("制作人：龚昱嘉"));
+		outtextxy(800, HIGH - i / 2, _T("张文祺"));
+		FlushBatchDraw();
+	}
+	for (int i = 0; i < 900; i++) {
+		settextstyle(50, 0, _T("Consolas"));
+		putimage(0, 0, &img_about);
+		outtextxy(310, HIGH - 1100 / 2, _T("制作人：龚昱嘉"));
+		outtextxy(800, HIGH - 1100 / 2, _T("张文祺"));
+		settextstyle(100, 0, _T("Consolas"));
+		outtextxy(500, HIGH-i/2, _T("特别鸣谢"));
+		FlushBatchDraw();
+	}
+	
+	for (int i = 0; i < 600; i++) {
+		settextstyle(50, 0, _T("Consolas"));
+		putimage(0, 0, &img_about);
+		outtextxy(310, HIGH - 1100 / 2, _T("制作人：龚昱嘉"));
+		outtextxy(800, HIGH - 1100 / 2, _T("张文祺"));
+		settextstyle(100, 0, _T("Consolas"));
+		outtextxy(500, HIGH - 900 / 2, _T("特别鸣谢"));
+		settextstyle(50, 0, _T("Consolas"));
+		outtextxy(310, HIGH-i/2, _T("游戏首席体验官：李忠磊"));
+		FlushBatchDraw();
+	}
+
+	for (int i = 0; i < 400; i++) {
+		settextstyle(50, 0, _T("Consolas"));
+		putimage(0, 0, &img_about);
+		outtextxy(310, HIGH - 1100 / 2, _T("制作人：龚昱嘉"));
+		outtextxy(800, HIGH - 1100 / 2, _T("张文祺"));
+		settextstyle(100, 0, _T("Consolas"));
+		outtextxy(500, HIGH - 900 / 2, _T("特别鸣谢"));
+		settextstyle(50, 0, _T("Consolas"));
+		outtextxy(310, HIGH - 600 / 2, _T("游戏首席体验官：李忠磊"));
+		settextstyle(40, 0, _T("Consolas"));
+		outtextxy(310, HIGH-i/2, _T("项目地址：https://github.com/XEric7/Ascension"));
+		outtextxy(600, HIGH+60-i/2, _T("欢迎交流讨论"));
+		FlushBatchDraw();
+	}
+
+	while (1) {
+		if ((GetKeyState(0x1B) & 0x8000))
+			break;
+	}
 }
