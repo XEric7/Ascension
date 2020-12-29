@@ -111,8 +111,7 @@ int main() {
 		}
 		
 	}
-	EndBatchDraw();
-	closegraph();
+	FlushBatchDraw();
 	if (showscore() == 1) {
 		goto BEGIN;
 	}
@@ -432,7 +431,7 @@ void showrank() {
 			if (fread(prank, sizeof(struct Rank), 1, rk) == 0) {
 				break;
 			}
-			/*
+			
 			//检测效验码
 			int right = 0;
 			for (int i = 0; i < 20; i++) {
@@ -443,7 +442,7 @@ void showrank() {
 			if (right != prank->right) {
 				continue;
 			}
-			*/
+			
 			count++;
 			if (count == 1) {
 				prank->next = NULL;
@@ -526,17 +525,49 @@ void showrank() {
 
 //返回1：重新开始游戏
 int showscore() {
-	system("cls");
-	printf("Game over\n");
-	printf("你的分数：%d\n", screen_down);
-	printf("按回车键继续\n");
+	IMAGE img_gameover;
+	loadimage(&img_gameover, _T("picture\\gameover0.png"), WIDTH, HIGH);
+	setbkmode(TRANSPARENT);
+	putimage(0, 0, &img_gameover);
+	settextstyle(50, 0, _T("Consolas"));
+	settextcolor(RED);
+	TCHAR outscore[10];
+	_stprintf(outscore, _T("%d"), screen_down);
+	outtextxy(310, 250, outscore);
+	FlushBatchDraw();
+	char input;
 	while (_getch() != 13);
-	printf("\n请输入您的用户名：");
+	loadimage(&img_gameover, _T("picture\\gameover1.png"), WIDTH, HIGH);
+	putimage(0, 0, &img_gameover);
+	outtextxy(310, 250, outscore);
+	FlushBatchDraw();
+	for (int i = 0; i < 20; i++) {
+		putimage(0, 0, &img_gameover);
+		outtextxy(310, 250, outscore);
+		input = _getch();
 
-	while ((scanf("%20[^\n]", &new_rank.name) != 1)) {
-		getchar();        //将缓冲区的\n读掉
-		printf("输入格式有误，请重新输入:");
+		if (input == 0x0D) {
+			break;
+		}
+		else if (input == 0x08) {
+			if (i == 0) {
+				i--;
+				continue;
+			}
+			else {
+				new_rank.name[--i] = 0;
+				i--;
+			}
+		}
+		else {
+			new_rank.name[i] = input;
+		}
+		USES_CONVERSION;
+		TCHAR* outname = A2T(new_rank.name);
+		outtextxy(200, 500, outname);   //名字
+		FlushBatchDraw();
 	}
+	//计算分数
 	new_rank.score = screen_down;
 	new_rank.blood = char_blood_max;
 	new_rank.rank = screen_down / char_blood_max;
@@ -566,13 +597,6 @@ int showscore() {
 	else {
 		printf("\n排行榜写入失败\n");
 	}
-	char input;
-	while (1) {
-		printf("按A返回主菜单，按其他键退出游戏\n");
-		input = tolower(_getch());
-		switch (input) {
-		case 'a':return 1;
-		default:return 0;
-	}
-	}
+
+	return 1;
 }
