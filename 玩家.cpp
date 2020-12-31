@@ -333,7 +333,6 @@ int ground_under(int x,int y) {
 			if (ground_position[x + q][y + i])
 				return 1;
 		}
-
 	}
 	return 0;
 }

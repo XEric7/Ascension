@@ -45,7 +45,7 @@ int main() {
 	}
 	getimage_char();
 	int blood = char_blood_max;   //血量系统
-	int blood_pluse = 0;     //无敌时间
+	int blood_pause = 0;     //无敌时间
 
 
 
@@ -95,14 +95,14 @@ int main() {
 		//screen_down += 10;
 		//top_ground += 10;
 
-		if (blood_pluse) {
-			blood_pluse--;
+		if (blood_pause) {
+			blood_pause--;
 		}
 		else {
 			int blood_substract = die();
 			if (blood_substract > 0) {
 				blood -= blood_substract;
-				blood_pluse = 25;
+				blood_pause = 25;
 				if (blood <= 0) {
 					break;
 				}
@@ -160,6 +160,9 @@ void init() {
 	}
 
 	enemy_init();
+	for (int i = 0; i < 20; i++) {
+		new_rank.name[i] = 0;
+	}
 }
 
 //返回1重新运行
