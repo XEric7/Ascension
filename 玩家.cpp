@@ -379,7 +379,7 @@ int ground_right(void) {
 
 //ÅÐ¶ÏËÀÍö  ·µ»Ø-1ÎªËÀÍö
 int die() {
-	if (char_position[1] > HIGH) {
+	if (char_position[1] > HIGH-20) {
 		return char_blood_max;
 	}
 	return ghost_beat() + enemy1_beat();
