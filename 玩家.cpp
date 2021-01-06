@@ -350,19 +350,23 @@ int ground_below() {
 //еп╤о╫ги╚ет╠ъйг╥Яспуз╣╡  1н╙сп 0н╙нч
 int ground_left(void){
 	//еп╤овС╠ъ
-	for (int p = 0; p < 10; p++) {         //x
+	if (char_position[0] <= -30)
+		return 1;
+	for (int p = 28; p < 40; p++) {         //x
 		for (int q = -5; q < 50; q++) {     //y
-			if (ground_position[char_position[0] - p][char_position[1] + q])
+			if (ground_position[char_position[0] + p][char_position[1] + q])
 				return 1;
 
 		}
 	}
-
+	
 	return 0;
 }
 
 //еп╤оср╠ъ
 int ground_right(void) {
+	if (char_position[0] > WIDTH - 65)
+		return 1;
 	for (int p = 0; p < 10; p++) {         //x
 		for (int q = -5; q < 50; q++) {     //y
 			if (ground_position[char_position[0] + 60 + p][char_position[1] + q])
