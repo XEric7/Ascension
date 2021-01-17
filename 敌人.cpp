@@ -8,12 +8,13 @@ void enemy_go(struct enemy* enemy);
 int enemyfire1_speed;
 
 //ghost
-IMAGE ghost_p[2][2];
-IMAGE enemy1[2];
-IMAGE enemy1fire1left[2];
-IMAGE enemy1fire1right[2];     //镜像对称 制作
+IMAGE ghost_p[2][2];   //幽灵图片 左右两张*遮罩图两张
+IMAGE enemy1[2];    //敌人一图片
+IMAGE enemy1fire1left[2];   //敌人以的火炮图片（向左）
+IMAGE enemy1fire1right[2];     //向右火炮图片 待制作 预留变量
 struct enemy ghost_a[enemy1_max];
 
+//初始化敌人
 void enemy_init() {
 	enemyfire1_speed = 5;
 	getimage_enemy();
@@ -27,6 +28,7 @@ void enemy_init() {
 	}
 }
 
+//敌人控制
 void enemy_control() {
 	//初始代码
 	//int enemy1fire1left_position[enemy1_max][2] = { 0 };
@@ -69,6 +71,7 @@ void rand_enemy(int ground_y, struct enemy* enemy) {
 	enemy->blood = enemy->blood_max;
 }
 
+//幽灵移动
 void enemy_go(struct enemy*enemy) {
 	enemy->x += enemy->speed;
 	if (ground_position[enemy->x][enemy->y + enemy->high] == 0) {
@@ -87,7 +90,7 @@ void ghost() {
 	}
 }
 
-
+//幽灵攻击
 int ghost_beat() {
 	for (int i = 0; i < enemy1_max; i++) {
 		if (ghost_a[i].blood <= 0) {
@@ -111,6 +114,7 @@ int ghost_beat() {
 	return 0;
 }
 
+//火炮攻击
 int enemy1_beat() {
 	for (int p = 0; p < 65; p++) {
 		for (int q = -10; q < 60; q++) {
@@ -125,6 +129,7 @@ int enemy1_beat() {
 }
 
 
+//敌人绘制
 void drawenemy1(void) {
 	//怪
 	loadimage(&enemy1[0], _T("enemy1_0.png"));

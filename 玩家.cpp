@@ -21,6 +21,7 @@ int fight_count;
 int jump_count;
 static char last;  //判断上一时刻状态  
 
+//玩家初始化
 void char_init(){
 	char_position[0] = 100;
 	char_position[1] = 680;
@@ -29,6 +30,7 @@ void char_init(){
 	last = 'r';
 }
 
+//批量导入图片
 void getimage_char() {
 	//向右奔跑
 	loadimage(&chara1_runr[0][0], _T("picture\\char1\\right\\1_0.png"));
@@ -132,6 +134,7 @@ void getimage_char() {
 	loadimage(&chara1_fightn[1][6][1], _T("picture\\char1\\fightn\\right\\6_1.png"));
 }
 
+//玩家向右奔跑
 void drawchar_runr() {
 	static int count = 0;
 	if (count >= 40) {
@@ -144,6 +147,7 @@ void drawchar_runr() {
 	count++;
 }
 
+//玩家向左奔跑
 void drawchar_runl() {
 	static int count = 0;
 	if (count >= 40) {
@@ -165,6 +169,7 @@ void drawchar() {
 }
 */
 
+//跳跃
 void draw_jump() {
 	const int JUMP_DELAY = 5;
 	int dir, edit=0;
@@ -250,6 +255,7 @@ void fightn() {
 	fight_count++;
 }
 
+//玩家控制
 void char_control() {
 	static int char1_speed = 0;    //y轴方向速度 向下为正方向
 	static char speedwait = 0;
