@@ -35,7 +35,7 @@ int char_blood_max = 5;
 
 int main() {
 	BEGIN:
-	srand(1);
+	srand(1);   //初始化随机数种子
 	new_rank.randmap = 0;
 	//初始化界面
 	START:
@@ -95,7 +95,7 @@ int main() {
 		//screen_down += 10;
 		//top_ground += 10;
 
-		if (blood_pause) {
+		if (blood_pause) {     //无敌时间
 			blood_pause--;
 		}
 		else {
@@ -104,7 +104,7 @@ int main() {
 				blood -= blood_substract;
 				blood_pause = 25;
 				if (blood <= 0) {
-					break;
+					break;          //当玩家血量<=0时，游戏退出
 				}
 			}
 		}
@@ -112,7 +112,7 @@ int main() {
 	}
 	FlushBatchDraw();
 	if (showscore() == 1) {
-		goto BEGIN;
+		goto BEGIN;     //重新开始游戏
 	}
 	return 0;
 }
